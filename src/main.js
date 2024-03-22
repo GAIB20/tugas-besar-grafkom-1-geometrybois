@@ -1,7 +1,12 @@
-import CanvasGaris from "./module/garis.js";
+import Drawer from "./module/core/drawer.js";
+
+// Drawer
+var drawer = new Drawer();
 
 document.getElementById('draw-garis').addEventListener('click', (e) => {
-    let draw = new CanvasGaris();
-    draw.drawArrays();
-    console.log('draw garis');
+    drawer.addModel("Garis");
+});
+
+document.getElementById('draw-polygon').addEventListener('click', (e) => {
+    drawer.addModel("Polygon");
 });

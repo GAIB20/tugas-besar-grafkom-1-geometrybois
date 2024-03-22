@@ -1,4 +1,4 @@
-function createFragmentShader() {
+function createFragmentShader(gl) {
     // Create the fragment shader source code
     const fragmentShaderSource = `
         precision mediump float;

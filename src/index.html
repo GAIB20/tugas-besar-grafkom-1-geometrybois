@@ -5,114 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geometry Bois | Grafika Komputer | Tugas Besar 1</title>
-    <link rel="stylesheet" href="index.css">
-    <style>
-        header {
-            position: absolute;
-            width: 100%;
-            z-index: 1;
-        }
-
-        header h1 {
-            position: relative;
-            text-align: center;
-            color: var(--primary-color);
-            font-size: larger;
-            padding: 5px;
-            margin: 0;
-        }
-
-        .left-panel {
-            position: absolute;
-            top: 0;
-            left: 0;
-            
-            display: flex;
-            justify-content: start;
-            align-items: start;
-
-            height: 100%;
-            margin-top: auto;
-            margin-bottom: auto;
-            z-index: 2;
-        }
-
-        .draw-selection {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            padding: 10px 0px;
-            background-color: #f0f0f0;
-            border: 1px solid black;
-            z-index: 2;
-        }
-
-        .draw-selection button {
-            margin: 5px;
-            padding: 5px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .draw-selection button:hover {
-            background-color: var(--primary-color-dark);
-        }
-
-        .list-of-shapes {
-            display: flex;
-            flex-direction: column;
-            justify-content: start;
-            align-items: center;
-            padding: 10px 0px;
-            background-color: #f0f0f0;
-            border: 1px solid black;
-            overflow-y: auto;
-            z-index: 2;
-        }
-
-        .list-of-shapes p {
-            margin: 0px;
-            padding: 0px 5px;
-            overflow-y: hidden;
-        }
-
-        .right-panel {
-            position: absolute;
-            top: 0;
-            right: 0;
-
-            display: flex;
-            justify-content: start;
-            align-items: start;
-
-            height: 100%;
-            max-width: 20%;
-            margin-top: auto;
-            margin-bottom: auto;
-            z-index: 2;
-        }
-
-        .right-panel p {
-            margin: 0;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border: 1px solid black;
-            z-index: 2;
-        }
-
-        #glcanvas {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            height: 100%;
-            width: 100%;
-            border: 1px solid black;
-            z-index: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -144,9 +37,10 @@
     <canvas id="glcanvas" height="400" width="400"><!-- Web GL ada di setiap File --></canvas>
     <script src="main.js" type="module"></script>
     <!-- <script src="garis.js" type="module"></script> -->
-    <script src="module/persegi.js" type="module"></script>
-    <script src="module/persegiPanjang.js" type="module"></script>
-    <script src="module/polygon.js" type="module"></script>
+    <script src="module/models/Garis.js" type="module"></script>
+    <script src="module/models/Persegi.js" type="module"></script>
+    <script src="module/models/PersegiPanjang.js" type="module"></script>
+    <script src="module/models/Polygon.js" type="module"></script>
     <script id="wbgl-test-availability">
         let canvas = document.createElement("canvas");
         var gl = canvas.getContext("webgl");
