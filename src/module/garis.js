@@ -90,7 +90,7 @@ class CanvasGaris {
         // code above this line is initialization code.
         // code below this line is rendering code.
 
-        webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+        
 
         // Tell WebGL how to convert from clip space to pixels
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
