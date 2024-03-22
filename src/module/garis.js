@@ -1,19 +1,37 @@
 "use strict";
 
+function createShader(gl, type, source) {
+    var shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+    if (success) {
+        return shader;
+    }
 
-class CanvasGaris extends HTMLElement {
+    console.log(gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+}
+
+function createProgram(gl, vertexShader, fragmentShader) {
+    var program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    var success = gl.getProgramParameter(program, gl.LINK_STATUS);
+    if (success) {
+        return program;
+    }
+
+    console.log(gl.getProgramInfoLog(program));
+    gl.deleteProgram(program);
+}
+class CanvasGaris {
     constructor() {
-        super();
-        this.attachShadow({ mode: "open" });
 
-        let canvas = document.createElement("canvas");
-        canvas.id = "garis-glCanvas";
-        canvas.style.display = "block";
-        canvas.width = 400;
+        let canvas = document.querySelector("#glcanvas")
         canvas.height = 400;
-        canvas.style.width = "400px";
-        canvas.style.height = "400px";
-        canvas.style.border = "1px solid black";
+        canvas.width = 400;
         var gl = canvas.getContext("webgl");
 
         if (!gl) {
@@ -21,33 +39,16 @@ class CanvasGaris extends HTMLElement {
             return;
         }
 
-        this.shadowRoot.appendChild(canvas);
-
         const vertex_shader_2d = `
-        // sebuah atribut akan menerima data dari buffer
-        attribute vec2 a_position;
- 
-        uniform vec2 u_resolution;
-
-        // semua shader punya fungsi utama (main)
+        // an attribute will receive data from a buffer
+        attribute vec4 a_position;
+        
+        // all shaders have a main function
         void main() {
-            // gl_Position merupakan variabel spesial yang harus diatur oleh vertex shader
-            // (anggap saja sebagai return result koordinat clip space)
-            // convert the position from pixels to 0.0 to 1.0
-            vec2 zeroToOne = a_position / u_resolution;
-         
-            // convert from 0->1 to 0->2
-            vec2 zeroToTwo = zeroToOne * 2.0;
-         
-            // convert from 0->2 to -1->+1 (clip space)
-            vec2 clipSpace = zeroToTwo - 1.0;
-         
-            gl_Position = vec4(clipSpace, 0, 1);
-
-            // vec4 b = vec4(x,y,z,w);
-            // b.x -> x
-            // b.xx -> vec2(x,y)
-            // b.xyz -> vec3(x,y,z)
+        
+            // gl_Position is a special variable a vertex shader
+            // is responsible for setting
+            gl_Position = a_position;
         }
         `;
 
@@ -71,39 +72,41 @@ class CanvasGaris extends HTMLElement {
         let program = createProgram(gl, vertexShader, fragmentShader);
         gl.useProgram(program);
 
+        var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+
+        // Create a buffer and put three 2d clip space points in it
+        var positionBuffer = gl.createBuffer();
+
+        // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+        var positions = [
+            0, 0,
+            0, 0.5,
+            0.7, 0,
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+        // code above this line is initialization code.
+        // code below this line is rendering code.
+
+        webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+        // Tell WebGL how to convert from clip space to pixels
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
         // Clear the canvas
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-        var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+        // Tell it to use our program (pair of shaders)
+        gl.useProgram(program);
 
-        // set the resolution
-        gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
-
-        let positionBuffer = gl.createBuffer();
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-        // three 2d points
-        var positions = [
-            10, 20,
-            80, 20,
-            10, 30,
-            10, 30,
-            80, 20,
-            80, 30,
-          ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-        
+        // Turn on the attribute
         gl.enableVertexAttribArray(positionAttributeLocation);
 
         // Bind the position buffer.
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-
 
         // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
         var size = 2;          // 2 components per iteration
@@ -111,72 +114,23 @@ class CanvasGaris extends HTMLElement {
         var normalize = false; // don't normalize the data
         var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
         var offset = 0;        // start at the beginning of the buffer
-        gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset)
+        gl.vertexAttribPointer(
+            positionAttributeLocation, size, type, normalize, stride, offset);
 
         // draw
         var primitiveType = gl.TRIANGLES;
         var offset = 0;
-        var count = 6;
+        var count = 3;
         gl.drawArrays(primitiveType, offset, count);
+    }
 
-
-        const canvasToDisplaySizeMap = new Map([[canvas, [400, 400]]]);
-
-        function resizeCanvasToDisplaySize(canvas) {
-            // Get the size the browser is displaying the canvas in device pixels.
-            const [displayWidth, displayHeight] = canvasToDisplaySizeMap.get(canvas);
-
-            // Check if the canvas is not the same size.
-            const needResize = canvas.width !== displayWidth ||
-                canvas.height !== displayHeight;
-
-            if (needResize) {
-                // Make the canvas the same size
-                canvas.width = displayWidth;
-                canvas.height = displayHeight;
-            }
-
-            return needResize;
-        }
-
-        function onResize(entries) {
-            for (const entry of entries) {
-                let width;
-                let height;
-                let dpr = window.devicePixelRatio;
-                if (entry.devicePixelContentBoxSize) {
-                    // NOTE: Only this path gives the correct answer
-                    // The other 2 paths are an imperfect fallback
-                    // for browsers that don't provide anyway to do this
-                    width = entry.devicePixelContentBoxSize[0].inlineSize;
-                    height = entry.devicePixelContentBoxSize[0].blockSize;
-                    dpr = 1; // it's already in width and height
-                } else if (entry.contentBoxSize) {
-                    if (entry.contentBoxSize[0]) {
-                        width = entry.contentBoxSize[0].inlineSize;
-                        height = entry.contentBoxSize[0].blockSize;
-                    } else {
-                        // legacy
-                        width = entry.contentBoxSize.inlineSize;
-                        height = entry.contentBoxSize.blockSize;
-                    }
-                } else {
-                    // legacy
-                    width = entry.contentRect.width;
-                    height = entry.contentRect.height;
-                }
-                const displayWidth = Math.round(width * dpr);
-                const displayHeight = Math.round(height * dpr);
-                canvasToDisplaySizeMap.set(entry.target, [displayWidth, displayHeight]);
-            }
-        }
-
-        const resizeObserver = new ResizeObserver(onResize);
-        resizeObserver.observe(canvas, { box: 'content-box' });
-
-    
-        // resizeCanvasToDisplaySize(gl.canvas);
+    drawArrays() {
+         // draw
+         var primitiveType = gl.TRIANGLES;
+         var offset = 0;
+         var count = 3;
+         gl.drawArrays(primitiveType, offset, count);
     }
 }
 
-customElements.define("canvas-garis", CanvasGaris);
+export default CanvasGaris;
