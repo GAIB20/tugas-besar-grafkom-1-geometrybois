@@ -26,12 +26,23 @@ function createProgram(gl, vertexShader, fragmentShader) {
     console.log(gl.getProgramInfoLog(program));
     gl.deleteProgram(program);
 }
+
+function resizeCanvasToDisplaySize(canvas) {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+
+    canvas.width = width;
+    canvas.height = height;
+}
+
+
+
 class CanvasGaris {
     constructor() {
 
         let canvas = document.querySelector("#glcanvas")
-        canvas.height = 400;
-        canvas.width = 400;
+        canvas.height = 100;
+        canvas.width = 100;
         var gl = canvas.getContext("webgl");
 
         if (!gl) {
@@ -90,7 +101,7 @@ class CanvasGaris {
         // code above this line is initialization code.
         // code below this line is rendering code.
 
-        
+        resizeCanvasToDisplaySize(gl.canvas);
 
         // Tell WebGL how to convert from clip space to pixels
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -125,11 +136,11 @@ class CanvasGaris {
     }
 
     drawArrays() {
-         // draw
-         var primitiveType = gl.TRIANGLES;
-         var offset = 0;
-         var count = 3;
-         gl.drawArrays(primitiveType, offset, count);
+        // draw
+        var primitiveType = gl.TRIANGLES;
+        var offset = 0;
+        var count = 3;
+        gl.drawArrays(primitiveType, offset, count);
     }
 }
 
