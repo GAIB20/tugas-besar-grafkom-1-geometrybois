@@ -14,6 +14,13 @@ class GLSLProgram {
         this.program = this.createProgram();
     }
 
+    /**
+     * Create a WebGL program.
+     * @returns {WebGLProgram} - The WebGL program.
+     * @throws {Error} - An error occurred compiling the shader.
+     * @example 
+     * const program = createProgram();
+    */
     createProgram() {
         const gl = this.gl;
         const program = gl.createProgram();
@@ -50,4 +57,21 @@ class GLSLProgram {
         
         return gl;
     }
+
+    /** 
+     * Resize a canvas element to the display size.
+     * @param {HTMLCanvasElement} canvas - The canvas element to resize.
+     * @returns {void}
+    */
+    static resizeCanvasToDisplaySize(canvas) {
+        
+        const displayWidth = canvas.clientWidth;
+        const displayHeight = canvas.clientHeight;
+
+        if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+            this.gl.canvas.width = displayWidth;
+            this.gl.canvas.height = displayHeight;
+        }
+    }
+      
 }
