@@ -48,14 +48,17 @@ class Drawer{
         
         const vertex_shader_2d = `
         // an attribute will receive data from a buffer
-        attribute vec4 a_position;
+        attribute vec2 a_position;
+        attribute vec4 a_color;
+        varying vec4 v_color;
         
         // all shaders have a main function
         void main() {
         
             // gl_Position is a special variable a vertex shader
             // is responsible for setting
-            gl_Position = a_position;
+            gl_Position = vec4(a_position,0,1);
+            v_color = a_color;
         }
         `;
         
@@ -64,11 +67,12 @@ class Drawer{
         // mediump merupakan default bagus yang berarti "medium precision".
         // selain itu juga ada highp (high precision) dan lowp (low precision).
         precision mediump float;
-        
+        varying vec4 v_color;
         void main() {
             // gl_FragColor merupakan variabel spesial yang harus diatur
             // oleh fragment shader (anggap saja sebagai return warna)
-            gl_FragColor = vec4(1, 0, 0.5, 1); // mengembalikan warna ungu kemerahan
+            // gl_FragColor = v_color; // Set agar warna mengikuti varying
+            gl_FragColor = vec4(1, 0, 0.5, 1);
         }
         `;
         // let vertexShader = createVertexShader(gl);
@@ -84,7 +88,7 @@ class Drawer{
         this.#gl.canvas.height = this.#gl.canvas.clientHeight;
         this.#gl.viewport(0,0, this.#gl.canvas.width, this.#gl.canvas.height);
         
-        this.#gl.clearColor(0,0,0,0);
+        this.#gl.clearColor(1,1,1,1);
         this.#gl.clear(this.#gl.COLOR_BUFFER_BIT);
         
         // use program : only once for one shader program
@@ -102,6 +106,11 @@ class Drawer{
                 0, -0.5,
                 -0.7, 0,
             ];
+            garis.setColors = [
+                1, 0, 0.5, 1,
+                1, 0, 0.5, 1,
+                1, 0, 0.5, 1,
+            ];
             garis.drawSetup();
             garis.draw();
             this.models.push(garis);
@@ -112,6 +121,11 @@ class Drawer{
                 0, 0,
                 0, 0.5,
                 0.7, 0,
+            ];
+            poligon.setColors = [
+                1, 0, 0.5, 1,
+                1, 0, 0.5, 1,
+                1, 0, 0.5, 1,
             ];
             poligon.drawSetup();
             poligon.draw();
