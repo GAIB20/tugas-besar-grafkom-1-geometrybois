@@ -14,3 +14,9 @@ document.getElementById('draw-polygon').addEventListener('click', (e) => {
     console.log(drawer.models);
     console.log("==============");
 });
+
+document.getElementById('draw-rectangle').addEventListener('click', (e) => {
+    drawer.addModel("Rectangle");
+    console.log(drawer.models);
+    console.log("==============");
+});

@@ -19,17 +19,17 @@ function createProgram(gl, vertexShader, fragmentShader) {
     gl.deleteProgram(program);
 }
 
-class Drawer{
+class Drawer {
     #program;
     #gl;
     models;
 
-    constructor(){
-        let canvas = document.querySelector("#glcanvas")
+    constructor() {
+        let canvas = document.querySelector("#glcanvas");
         canvas.height = 100;
         canvas.width = 100;
         this.#gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
-        
+
         if (!this.#gl) {
             console.log("WebGL not supported");
             return;
@@ -44,11 +44,11 @@ class Drawer{
         // Setup Canvas
         this.#gl.canvas.width = this.#gl.canvas.clientWidth;
         this.#gl.canvas.height = this.#gl.canvas.clientHeight;
-        this.#gl.viewport(0,0, this.#gl.canvas.width, this.#gl.canvas.height);
-        
-        this.#gl.clearColor(1,1,1,1);
+        this.#gl.viewport(0, 0, this.#gl.canvas.width, this.#gl.canvas.height);
+
+        this.#gl.clearColor(1, 1, 1, 1);
         this.#gl.clear(this.#gl.COLOR_BUFFER_BIT);
-        
+
         // use program : only once for one shader program
         this.#gl.useProgram(this.#program);
 
@@ -56,48 +56,52 @@ class Drawer{
         this.models = [];
     }
 
-    addModel(modelType){
-        if (modelType == "Garis"){
+    addModel(modelType) {
+        if (modelType == "Garis") {
             let garis = new Garis(this.#gl, this.#program);
-            garis.setPositions = [
-                0, 0,
-                0, -0.5,
-                -0.7, 0,
-            ];
-            garis.setColors = [
-                1, 0, 0.5, 1,
-                1, 0, 0.5, 1,
-                1, 0, 0.5, 1,
-            ];
+            garis.setPositions = [0, 0, 0, -0.5, -0.7, 0];
+            garis.setColors = [1, 0, 0.5, 1, 1, 0, 0.5, 1, 1, 0, 0.5, 1];
             garis.drawSetup();
             garis.draw();
             this.models.push(garis);
-            console.log('draw garis');
-        } else if (modelType=="Polygon"){
+            console.log("draw garis");
+        } else if (modelType == "Polygon") {
             let poligon = new Polygon(this.#gl, this.#program);
-            poligon.setPositions = [
-                0, 0,
-                0, 0.5,
-                0.7, 0,
-            ];
-            poligon.setColors = [
-                1, 0, 0.5, 1,
-                1, 0, 0.5, 1,
-                1, 0, 0.5, 1,
-            ];
+            poligon.setPositions = [0, 0, 0, 0.5, 0.7, 0];
+            poligon.setColors = [1, 0, 0.5, 1, 1, 0, 0.5, 1, 1, 0, 0.5, 1];
             poligon.drawSetup();
             poligon.draw();
             this.models.push(poligon);
-            console.log('draw poligon');            
+            console.log("draw poligon");
+        } else if (modelType == "Rectangle") {
+            let rectangle = new Rectangle(this.#gl, this.#program);
+            var r1 = Math.random();
+            var b1 = Math.random();
+            var g1 = Math.random();
+            rectangle.setPositions = [
+                -150, -100, 150, -100, -150, 100, 150, -100, -150, 100, 150, 100,
+            ];
+            rectangle.setColors = [
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+            ];
+            rectangle.drawSetup();
+            rectangle.draw();
+            this.models.push(rectangle);
+            console.log("draw rectangle");
         }
         this.drawModels();
     }
 
-    drawModels(){
-        this.models.forEach( (model) => {
+    drawModels() {
+        this.models.forEach((model) => {
             model.draw();
-            console.log("draw model")
-        })
+            console.log("draw model");
+        });
     }
 }
 
