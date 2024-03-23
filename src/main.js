@@ -19,7 +19,7 @@ function renderRightPanel(info){
                 </div>
 
                 ${
-                    info.drawingObject === "polygon" ? 
+                    info.drawingObject === "Polygon" ? 
                     `<div>
                         <label for="">Max Vertex: </label>
                         <input type="number" id="max-vertex" name="maxVertex">
@@ -37,16 +37,16 @@ function renderRightPanel(info){
 
 
 document.getElementById('draw-garis').addEventListener('click', (e) => {
+    renderRightPanel(new DrawingInfo("Garis", "0F0F0F"));
     drawer.addModel("Garis");
 });
 
 document.getElementById('draw-polygon').addEventListener('click', (e) => {
-    renderRightPanel(new DrawingInfo("polygon", "#0F0F0F"));
+    renderRightPanel(new DrawingInfo("Polygon", "#0F0F0F"));
     drawer.addModel("Polygon")
 });
 
 document.getElementById('draw-rectangle').addEventListener('click', (e) => {
+    renderRightPanel(new DrawingInfo("Persegi Panjang", "0F0F0F"));
     drawer.addModel("Rectangle");
-    console.log(drawer.models);
-    console.log("==============");
 });

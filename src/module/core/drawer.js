@@ -2,6 +2,7 @@
 
 import Garis from "../models/garis.js";
 import Polygon from "../models/polygon.js";
+import Rectangle from "../models/persegiPanjang.js";
 import createFragmentShader from "../shader/fragmentShader.js";
 import createVertexShader from "../shader/vertexShader.js";
 
@@ -70,8 +71,8 @@ class Drawer {
         if (modelType == "Garis") {
             let garis = new Garis(this.#gl, this.#program);
             garis.setPositions = [
-                1000, 400,
-                1000, 0,
+                800, 400,
+                800, 0,
                 0, 0,
             ];
             garis.setColors = [
@@ -85,8 +86,16 @@ class Drawer {
             console.log("draw garis");
         } else if (modelType == "Polygon") {
             let poligon = new Polygon(this.#gl, this.#program);
-            poligon.setPositions = [0, 0, 0, 0.5, 0.7, 0];
-            poligon.setColors = [1, 0, 0.5, 1, 1, 0, 0.5, 1, 1, 0, 0.5, 1];
+            poligon.setPositions = [
+                200, 400,
+                200, 0,
+                0, 0,
+            ];
+            poligon.setColors = [
+                1, 0, 0.5, 1,
+                1, 0, 0.5, 1,
+                1, 0, 0.5, 1,
+            ];
             poligon.drawSetup();
             poligon.draw();
             this.models.push(poligon);
