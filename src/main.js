@@ -4,6 +4,7 @@ import Drawer from "./module/core/drawer.js";
 
 // Drawer
 var drawer = new Drawer();
+var drawerModels = drawer.models;
 var rightPanel = document.querySelector(".right-panel");
 
 function renderRightPanel(info){
@@ -49,4 +50,20 @@ document.getElementById('draw-polygon').addEventListener('click', (e) => {
 document.getElementById('draw-rectangle').addEventListener('click', (e) => {
     renderRightPanel(new DrawingInfo("Persegi Panjang", "0F0F0F"));
     drawer.addModel("Rectangle");
+});
+
+document.getElementById('save-btn').addEventListener('click', (e) => {
+    var types = [];
+    var positions = [];
+    var colors = [];
+    drawerModels.forEach((model) => {
+        types.push(model.getType)
+        positions.push(model.getPositions)
+        colors.push(model.getColors)
+    });
+    var testString = "";
+    types.forEach((type) => {
+        testString += type + ", "
+    })
+    console.log(positions)
 });

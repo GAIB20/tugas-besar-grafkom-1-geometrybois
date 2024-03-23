@@ -4,6 +4,7 @@ class Drawable {
     // Attributes
     _id;
     #gl;
+    #type;
     #program;
     #positionAttributeLocation;
     #positionBuffer;
@@ -30,13 +31,14 @@ class Drawable {
 
 
     // Constructor
-    constructor(gl, program, vertexCount = 0, count = 0){
+    constructor(gl, program, vertexCount = 0, count = 0, type = "Model"){
         // Set gl and program
         this.#gl = gl;
         this.#count = count;
         this.#program = program;
         this.#maxVertex = vertexCount;
         this.#vertexCount = vertexCount;
+        this.#type = type;
 
         // look up where the vertex data needs to go.
         this.#positionAttributeLocation = this.#gl.getAttribLocation(this.#program, "a_position");
@@ -74,6 +76,14 @@ class Drawable {
     // Getter
     get getPositions(){
         return this.#positions;
+    }
+
+    get getType() {
+        return this.#type;
+    }
+
+    get getColors() {
+        return this.#colors;
     }
     
     // Public Methods

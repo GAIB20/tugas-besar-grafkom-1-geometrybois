@@ -85,11 +85,14 @@ class Drawer {
             this.models.push(garis);
             console.log("draw garis");
         } else if (modelType == "Polygon") {
-            let poligon = new Polygon(this.#gl, this.#program);
+            // test the number of elements being drawn = 5
+            let poligon = new Polygon(this.#gl, this.#program, 5, 5);
             poligon.setPositions = [
                 200, 400,
                 200, 0,
                 0, 0,
+                100, 50,
+                30, 20
             ];
             poligon.setColors = [
                 1, 0, 0.5, 1,
@@ -135,6 +138,8 @@ class Drawer {
             console.log("draw model");
         });
     }
+
+    getModels
 }
 
 export default Drawer;
