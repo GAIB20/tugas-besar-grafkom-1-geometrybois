@@ -44,3 +44,9 @@ document.getElementById('draw-polygon').addEventListener('click', (e) => {
     renderRightPanel(new DrawingInfo("polygon", "#0F0F0F"));
     drawer.addModel("Polygon")
 });
+
+document.getElementById('draw-rectangle').addEventListener('click', (e) => {
+    drawer.addModel("Rectangle");
+    console.log(drawer.models);
+    console.log("==============");
+});

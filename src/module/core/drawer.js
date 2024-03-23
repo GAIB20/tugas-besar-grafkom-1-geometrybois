@@ -19,7 +19,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
     gl.deleteProgram(program);
 }
 
-class Drawer{
+class Drawer {
     #program;
     #gl;
     #resolutionUniformLocation;
@@ -28,7 +28,7 @@ class Drawer{
     constructor(){
         let canvas = document.querySelector("#glcanvas")
         this.#gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
-        
+
         if (!this.#gl) {
             console.log("WebGL not supported");
             return;
@@ -66,8 +66,8 @@ class Drawer{
         this.models = [];
     }
 
-    addModel(modelType){
-        if (modelType == "Garis"){
+    addModel(modelType) {
+        if (modelType == "Garis") {
             let garis = new Garis(this.#gl, this.#program);
             garis.setPositions = [
                 1000, 400,
@@ -82,32 +82,44 @@ class Drawer{
             garis.drawSetup();
             garis.draw();
             this.models.push(garis);
-            console.log('draw garis');
-        } else if (modelType=="Polygon"){
+            console.log("draw garis");
+        } else if (modelType == "Polygon") {
             let poligon = new Polygon(this.#gl, this.#program);
-            poligon.setPositions = [
-                0, 0,
-                0, 0.5,
-                0.7, 0,
-            ];
-            poligon.setColors = [
-                1, 0, 0.5, 1,
-                1, 0, 0.5, 1,
-                1, 0, 0.5, 1,
-            ];
+            poligon.setPositions = [0, 0, 0, 0.5, 0.7, 0];
+            poligon.setColors = [1, 0, 0.5, 1, 1, 0, 0.5, 1, 1, 0, 0.5, 1];
             poligon.drawSetup();
             poligon.draw();
             this.models.push(poligon);
-            console.log('draw poligon');            
+            console.log("draw poligon");
+        } else if (modelType == "Rectangle") {
+            let rectangle = new Rectangle(this.#gl, this.#program);
+            var r1 = Math.random();
+            var b1 = Math.random();
+            var g1 = Math.random();
+            rectangle.setPositions = [
+                -150, -100, 150, -100, -150, 100, 150, -100, -150, 100, 150, 100,
+            ];
+            rectangle.setColors = [
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+                r1, b1, g1, 1,
+            ];
+            rectangle.drawSetup();
+            rectangle.draw();
+            this.models.push(rectangle);
+            console.log("draw rectangle");
         }
         this.drawModels();
     }
 
-    drawModels(){
-        this.models.forEach( (model) => {
+    drawModels() {
+        this.models.forEach((model) => {
             model.draw();
-            console.log("draw model")
-        })
+            console.log("draw model");
+        });
     }
 }
 
