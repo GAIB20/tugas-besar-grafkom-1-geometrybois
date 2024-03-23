@@ -76,7 +76,6 @@ header h1 {
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 10px 0px;
     background-color: #f0f0f0;
     border: 1px solid black;
     z-index: 2;
@@ -91,8 +90,21 @@ header h1 {
     cursor: pointer;
 }
 
+
 .draw-selection button:hover {
     background-color: var(--primary-color-dark);
+}
+
+.draw-selection .tools {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
+    border-bottom: 1px solid black;
+}
+.draw-selection .menu {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
 }
 
 .list-of-shapes {
@@ -158,9 +170,6 @@ header h1 {
 
 #glcanvas {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     height: 100%;
     width: 100%;
     border: 1px solid black;
