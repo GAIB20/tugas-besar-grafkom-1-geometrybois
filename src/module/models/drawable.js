@@ -4,6 +4,7 @@ class Drawable {
     // Attributes
     _id;
     #gl;
+    #type;
     #program;
     #positionAttributeLocation;
     #positionBuffer;
@@ -30,15 +31,19 @@ class Drawable {
 
 
     // Constructor
-    constructor(gl, program){
+    constructor(gl, program, vertexCount = 0, count = 0, type = "Model"){
         // Set gl and program
         this.#gl = gl;
+        this.#count = count;
         this.#program = program;
+        this.#maxVertex = vertexCount;
+        this.#vertexCount = vertexCount;
+        this.#type = type;
 
         // look up where the vertex data needs to go.
         this.#positionAttributeLocation = this.#gl.getAttribLocation(this.#program, "a_position");
         this.#colorAttributeLocation = this.#gl.getAttribLocation(this.#program, "a_color");
-        this.#matrixAttributeLocation = this.#gl.getUniformLocation(program, "u_matrix");
+        this.#matrixAttributeLocation = this.#gl.getUniformLocation(this.#program, "u_matrix");
         
         // Create a buffer and put three 2d clip space points in it
         this.#positionBuffer = this.#gl.createBuffer();
@@ -72,6 +77,14 @@ class Drawable {
     get getPositions(){
         return this.#positions;
     }
+
+    get getType() {
+        return this.#type;
+    }
+
+    get getColors() {
+        return this.#colors;
+    }
     
     // Public Methods
     setPositionAttribute(size = 2, type = this.#gl.FLOAT, normalize = false, stride=0, offset=0){
@@ -93,10 +106,9 @@ class Drawable {
         this.#gl.vertexAttribPointer(this.#colorAttributeLocation, this.#colorSize,this.#colorType, 
             this.#colorNormalize, this.#colorStride, this.#colorOffset);
     }
-    setDrawAttributes(primitiveType=this.#gl.TRIANGLES, offset=0, count=3){
+    setDrawAttributes(primitiveType=this.#gl.TRIANGLES, offset=0){
         this.#primitiveType = primitiveType;
         this.#drawOffset = offset;
-        this.#count = count;
     }
     
     drawSetup(){

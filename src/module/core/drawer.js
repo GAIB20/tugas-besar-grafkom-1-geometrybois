@@ -84,7 +84,7 @@ class Drawer {
     createModelCandidate(modelType){
         let model = null;
         if (modelType == "Garis") {
-            model = new Garis(this.#gl, this.#program);
+            model = new Garis(this.#gl, this.#program,3, 3);
             model.setPositions = [
                 800, 400,
                 800, 0,
@@ -97,11 +97,13 @@ class Drawer {
             ];
             console.log("draw garis");
         } else if (modelType == "Polygon") {
-            model = new Polygon(this.#gl, this.#program);
+            model = new Polygon(this.#gl, this.#program, 5, 5);
             model.setPositions = [
                 200, 400,
                 200, 0,
                 0, 0,
+                100, 50,
+                30, 20
             ];
             model.setColors = [
                 1, 0, 0.5, 1,
@@ -115,9 +117,12 @@ class Drawer {
             var b1 = Math.random();
             var g1 = Math.random();
             model.setPositions = [
-                600, 400,
-                600, 0,
-                0, 0,
+                -400,200,
+                400, 200,
+          -400,  300,
+          400, 200,
+          -400,  300,
+          400,  300
             ];
             model.setColors = [
                 r1, b1, g1, 1,
@@ -129,11 +134,17 @@ class Drawer {
             ];
             console.log("draw rectangle");
         }
+
+        this.modelCandidate = model;
+
         model.drawSetup();
         model.draw();
-        this.modelCandidate = model;
-        // this.drawModels();
-        model.draw();
+    }
+
+    drawModels() {
+        this.models.forEach((model) => {
+            model.draw();
+        });
     }
 }
 
