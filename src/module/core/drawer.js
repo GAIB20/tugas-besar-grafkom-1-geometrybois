@@ -39,7 +39,7 @@ class Drawer{
         let canvas = document.querySelector("#glcanvas")
         canvas.height = 100;
         canvas.width = 100;
-        this.#gl = canvas.getContext("webgl");
+        this.#gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
         
         if (!this.#gl) {
             console.log("WebGL not supported");
@@ -79,6 +79,17 @@ class Drawer{
         // setup GLSL program
         this.#program = createProgram(this.#gl, vertexShader, fragmentShader);
 
+        // Setup Canvas
+        this.#gl.canvas.width = this.#gl.canvas.clientWidth;
+        this.#gl.canvas.height = this.#gl.canvas.clientHeight;
+        this.#gl.viewport(0,0, this.#gl.canvas.width, this.#gl.canvas.height);
+        
+        this.#gl.clearColor(0,0,0,0);
+        this.#gl.clear(this.#gl.COLOR_BUFFER_BIT);
+        
+        // use program : only once for one shader program
+        this.#gl.useProgram(this.#program);
+
         // Empty models
         this.models = [];
     }
@@ -107,6 +118,14 @@ class Drawer{
             this.models.push(poligon);
             console.log('draw poligon');            
         }
+        this.drawModels();
+    }
+
+    drawModels(){
+        this.models.forEach( (model) => {
+            model.draw();
+            console.log("draw model")
+        })
     }
 }
 

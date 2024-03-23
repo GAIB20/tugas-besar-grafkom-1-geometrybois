@@ -2,12 +2,13 @@
 
 class Drawable {
     // Attributes
+    _id;
     #gl;
     #program;
     #positionAttributeLocation;
     #positionBuffer;
     #positions;
-    #size;          // 2 components per iteration
+    #size;          // components per iteration
     #type;   // the data is 32bit floats
     #normalize; // don't normalize the data
     #stride;        // 0 = move forward size * sizeof(type) each iteration to get the next position
@@ -23,9 +24,8 @@ class Drawable {
         this.#gl = gl;
         this.#program = program;
 
-        this.#gl.useProgram(this.#program);
         // look up where the vertex data needs to go.
-        this.#positionAttributeLocation = this.#gl.getAttribLocation(program, "a_position");
+        this.#positionAttributeLocation = this.#gl.getAttribLocation(this.#program, "a_position");
         
         // Create a buffer and put three 2d clip space points in it
         this.#positionBuffer = this.#gl.createBuffer();
@@ -48,19 +48,6 @@ class Drawable {
     get getPositions(){
         return this.#positions;
     }
-
-    // Private Methods
-    #resizeCanvasToDisplaySize(){
-        this.#gl.canvas.width = this.#gl.canvas.clientWidth;
-        this.#gl.canvas.height = this.#gl.canvas.clientHeight;
-        this.#gl.viewport(0,0, this.#gl.canvas.width, this.#gl.canvas.height);
-    }
-
-    #clearCanvas(){
-        this.#gl.clearColor(0,0,0,0);
-        this.#gl.clear(this.#gl.COLOR_BUFFER_BIT);
-    }
-
     
     // Public Methods
     setVertexAttribPointer(size = 2, type = this.#gl.FLOAT, normalize = false, stride=0, offset=0){
@@ -79,11 +66,7 @@ class Drawable {
     }
     
     drawSetup(){
-        
         this.#gl.bufferData(this.#gl.ARRAY_BUFFER, new Float32Array(this.#positions), this.#gl.STATIC_DRAW);
-        this.#resizeCanvasToDisplaySize();
-        // this.#clearCanvas();
-        this.#gl.useProgram(this.#program);
         this.#gl.enableVertexAttribArray(this.#positionAttributeLocation);
         this.#gl.bindBuffer(this.#gl.ARRAY_BUFFER, this.#positionBuffer);
     }
