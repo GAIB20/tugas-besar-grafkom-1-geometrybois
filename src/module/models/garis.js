@@ -3,8 +3,8 @@ import Drawable from "./drawable.js";
 
 class Garis extends Drawable{
     static counter = 0;
-    constructor(gl, program){
-        super(gl,program);
+    constructor(gl, program, vertexCount = 1, count = 3){
+        super(gl,program, vertexCount, count);
         this._id = "garis#"+Garis.counter;
         Garis.counter+=1;
     }

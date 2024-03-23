@@ -30,15 +30,18 @@ class Drawable {
 
 
     // Constructor
-    constructor(gl, program){
+    constructor(gl, program, vertexCount = 0, count = 0){
         // Set gl and program
         this.#gl = gl;
+        this.#count = count;
         this.#program = program;
+        this.#maxVertex = vertexCount;
+        this.#vertexCount = vertexCount;
 
         // look up where the vertex data needs to go.
         this.#positionAttributeLocation = this.#gl.getAttribLocation(this.#program, "a_position");
         this.#colorAttributeLocation = this.#gl.getAttribLocation(this.#program, "a_color");
-        this.#matrixAttributeLocation = this.#gl.getUniformLocation(program, "u_matrix");
+        this.#matrixAttributeLocation = this.#gl.getUniformLocation(this.#program, "u_matrix");
         
         // Create a buffer and put three 2d clip space points in it
         this.#positionBuffer = this.#gl.createBuffer();
@@ -93,10 +96,9 @@ class Drawable {
         this.#gl.vertexAttribPointer(this.#colorAttributeLocation, this.#colorSize,this.#colorType, 
             this.#colorNormalize, this.#colorStride, this.#colorOffset);
     }
-    setDrawAttributes(primitiveType=this.#gl.TRIANGLES, offset=0, count=3){
+    setDrawAttributes(primitiveType=this.#gl.TRIANGLES, offset=0){
         this.#primitiveType = primitiveType;
         this.#drawOffset = offset;
-        this.#count = count;
     }
     
     drawSetup(){
