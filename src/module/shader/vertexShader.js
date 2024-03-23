@@ -1,19 +1,18 @@
 
 function createVertexShader(gl) {
-    const vertexShaderSource = `
+    const vertexShaderSource =`
+        // an attribute will receive data from a buffer
         attribute vec2 a_position;
         attribute vec4 a_color;
-        
-        uniform mat3 u_matrix;
-        
         varying vec4 v_color;
         
+        // all shaders have a main function
         void main() {
-        // Multiply the position by the matrix.
-        gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
         
-        // Copy the color from the attribute to the varying.
-        v_color = a_color;
+            // gl_Position is a special variable a vertex shader
+            // is responsible for setting
+            gl_Position = vec4(a_position,0,1);
+            v_color = a_color;
         }
     `;
 

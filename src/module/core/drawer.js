@@ -2,6 +2,8 @@
 
 import Garis from "../models/garis.js";
 import Polygon from "../models/polygon.js";
+import createFragmentShader from "../shader/fragmentShader.js";
+import createVertexShader from "../shader/vertexShader.js";
 
 function createProgram(gl, vertexShader, fragmentShader) {
     var program = gl.createProgram();
@@ -15,19 +17,6 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
     console.log(gl.getProgramInfoLog(program));
     gl.deleteProgram(program);
-}
-
-function createShader(gl, type, source) {
-    var shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-    if (success) {
-        return shader;
-    }
-
-    console.log(gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
 }
 
 class Drawer{
@@ -45,40 +34,9 @@ class Drawer{
             console.log("WebGL not supported");
             return;
         }
-        
-        const vertex_shader_2d = `
-        // an attribute will receive data from a buffer
-        attribute vec2 a_position;
-        attribute vec4 a_color;
-        varying vec4 v_color;
-        
-        // all shaders have a main function
-        void main() {
-        
-            // gl_Position is a special variable a vertex shader
-            // is responsible for setting
-            gl_Position = vec4(a_position,0,1);
-            v_color = a_color;
-        }
-        `;
-        
-        const fragment_shader_2d = `
-        // fragment shader tidak punya default precision, jadi kita harus memilihnya.
-        // mediump merupakan default bagus yang berarti "medium precision".
-        // selain itu juga ada highp (high precision) dan lowp (low precision).
-        precision mediump float;
-        varying vec4 v_color;
-        void main() {
-            // gl_FragColor merupakan variabel spesial yang harus diatur
-            // oleh fragment shader (anggap saja sebagai return warna)
-            // gl_FragColor = v_color; // Set agar warna mengikuti varying
-            gl_FragColor = vec4(1, 0, 0.5, 1);
-        }
-        `;
-        // let vertexShader = createVertexShader(gl);
-        // let fragmentShader = createFragmentShader(gl);
-        let vertexShader = createShader(this.#gl, this.#gl.VERTEX_SHADER, vertex_shader_2d);
-        let fragmentShader = createShader(this.#gl, this.#gl.FRAGMENT_SHADER, fragment_shader_2d);
+
+        let vertexShader = createVertexShader(this.#gl);
+        let fragmentShader =createFragmentShader(this.#gl);
 
         // setup GLSL program
         this.#program = createProgram(this.#gl, vertexShader, fragmentShader);
