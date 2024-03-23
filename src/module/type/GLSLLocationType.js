@@ -1,3 +1,10 @@
+
+/**
+ * GLSL Location Type
+ * @class data structure for GLSL
+ * @param {WebGLRenderingContext} gl
+ * @param {WebGLProgram} program
+ */
 class GLSLLocationType {
     #gl; #program;
 

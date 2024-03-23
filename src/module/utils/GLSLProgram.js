@@ -6,12 +6,9 @@ import createVertexShader from "../shader/vertexShader";
  * @class
  * @classdesc A class to represent a GLSL program.
  * @property {WebGLRenderingContext} gl - The WebGL rendering context.
- * @property {WebGLProgram} program - The WebGL program.
  */
 class GLSLProgram {
-    constructor(gl) {
-        this.gl = gl;
-        this.program = this.createProgram();
+    constructor() {
     }
 
     /**
@@ -21,8 +18,7 @@ class GLSLProgram {
      * @example 
      * const program = createProgram();
     */
-    createProgram() {
-        const gl = this.gl;
+    createProgram(gl) {
         const program = gl.createProgram();
 
         gl.attachShader(program, createVertexShader(gl));
@@ -35,10 +31,6 @@ class GLSLProgram {
         }
 
         return program;
-    }
-
-    use() {
-        this.gl.useProgram(this.program);
     }
 
     /**
@@ -75,3 +67,5 @@ class GLSLProgram {
     }
       
 }
+
+export default GLSLProgram;
