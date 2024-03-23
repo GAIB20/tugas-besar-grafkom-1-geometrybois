@@ -1,4 +1,3 @@
-
 /**
  * GLSL Location Type
  * @class data structure for GLSL

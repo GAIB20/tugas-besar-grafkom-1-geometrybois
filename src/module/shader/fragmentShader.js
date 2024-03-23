@@ -7,9 +7,8 @@ function createFragmentShader(gl) {
         precision mediump float;
         varying vec4 v_color;
         void main() {
-            // gl_FragColor merupakan variabel spesial yang harus diatur
-            // oleh fragment shader (anggap saja sebagai return warna)
-            // gl_FragColor = v_color; // Set agar warna mengikuti varying
+            // gl_FragColor merupakan variabel spesial yang harus diatur oleh fragment shader (anggap saja sebagai return warna)
+            gl_FragColor = v_color;
             gl_FragColor = vec4(1, 0, 0.5, 1);
         }
     `;
