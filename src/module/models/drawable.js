@@ -22,6 +22,9 @@ class Drawable {
     #colorStride;        // 0 = move forward size * sizeof(type) each iteration to get the next position
     #colorOffset;        // start at the beginning of the buffer
     #primitiveType;
+    #matrixAttributeLocation;
+    #maxVertex;
+    #vertexCount;
     #drawOffset;
     #count;
 
@@ -35,6 +38,7 @@ class Drawable {
         // look up where the vertex data needs to go.
         this.#positionAttributeLocation = this.#gl.getAttribLocation(this.#program, "a_position");
         this.#colorAttributeLocation = this.#gl.getAttribLocation(this.#program, "a_color");
+        this.#matrixAttributeLocation = this.#gl.getUniformLocation(program, "u_matrix");
         
         // Create a buffer and put three 2d clip space points in it
         this.#positionBuffer = this.#gl.createBuffer();

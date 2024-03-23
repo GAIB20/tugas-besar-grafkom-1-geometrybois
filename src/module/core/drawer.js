@@ -106,7 +106,9 @@ class Drawer {
             var b1 = Math.random();
             var g1 = Math.random();
             rectangle.setPositions = [
-                -150, -100, 150, -100, -150, 100, 150, -100, -150, 100, 150, 100,
+                600, 400,
+                600, 0,
+                0, 0,
             ];
             rectangle.setColors = [
                 r1, b1, g1, 1,
