@@ -138,6 +138,7 @@ class Drawer {
         this.modelCandidate = model;
 
         model.drawSetup();
+        console.log(model);
         model.draw();
     }
 
