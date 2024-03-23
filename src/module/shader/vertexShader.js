@@ -5,13 +5,14 @@ function createVertexShader(gl) {
         attribute vec2 a_position;
         attribute vec4 a_color;
         varying vec4 v_color;
+        uniform vec2 u_resolution;
         
         // all shaders have a main function
-        void main() {
-        
+        void main() {        
+            // convert the position from pixels to clipspace (-1, +1)
+            vec2 clipSpace = (a_position / u_resolution) * 2.0 - 1.0;
             // gl_Position is a special variable a vertex shader
-            // is responsible for setting
-            gl_Position = vec4(a_position,0,1);
+            gl_Position = vec4(clipSpace,0,1);
             v_color = a_color;
         }
     `;

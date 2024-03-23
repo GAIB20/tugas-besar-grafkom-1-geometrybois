@@ -22,12 +22,11 @@ function createProgram(gl, vertexShader, fragmentShader) {
 class Drawer{
     #program;
     #gl;
+    #resolutionUniformLocation;
     models;
 
     constructor(){
         let canvas = document.querySelector("#glcanvas")
-        canvas.height = 100;
-        canvas.width = 100;
         this.#gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
         
         if (!this.#gl) {
@@ -42,15 +41,26 @@ class Drawer{
         this.#program = createProgram(this.#gl, vertexShader, fragmentShader);
 
         // Setup Canvas
-        this.#gl.canvas.width = this.#gl.canvas.clientWidth;
-        this.#gl.canvas.height = this.#gl.canvas.clientHeight;
-        this.#gl.viewport(0,0, this.#gl.canvas.width, this.#gl.canvas.height);
+        var leftPanelWidth = (document.querySelector('.left-panel')).offsetWidth;
+        var rightPanelWidth = (document.querySelector('.right-panel')).offsetWidth;
+        // var headerHight = (document.querySelector("header h1")).offsetWidth;
         
+        console.log(`window: ${window.innerWidth}, ${window.innerHeight}`);
+        this.#gl.canvas.width = this.#gl.canvas.clientWidth - leftPanelWidth - rightPanelWidth;
+        this.#gl.canvas.height = this.#gl.canvas.clientHeight;
+        this.#gl.viewport(leftPanelWidth,0, this.#gl.canvas.width, this.#gl.canvas.height);        
         this.#gl.clearColor(1,1,1,1);
         this.#gl.clear(this.#gl.COLOR_BUFFER_BIT);
         
+        
         // use program : only once for one shader program
         this.#gl.useProgram(this.#program);
+
+        // Setup the resolution
+        this.#resolutionUniformLocation = this.#gl.getUniformLocation(this.#program, "u_resolution");
+        this.#gl.uniform2f(this.#resolutionUniformLocation, this.#gl.canvas.width, this.#gl.canvas.height);
+        
+        console.log(`canvas width: ${this.#gl.canvas.width} height: ${this.#gl.canvas.height}`);
 
         // Empty models
         this.models = [];
@@ -60,9 +70,9 @@ class Drawer{
         if (modelType == "Garis"){
             let garis = new Garis(this.#gl, this.#program);
             garis.setPositions = [
+                1000, 400,
+                1000, 0,
                 0, 0,
-                0, -0.5,
-                -0.7, 0,
             ];
             garis.setColors = [
                 1, 0, 0.5, 1,

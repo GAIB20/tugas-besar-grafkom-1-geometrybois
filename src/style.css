@@ -123,18 +123,37 @@ header h1 {
     align-items: start;
 
     height: 100%;
-    max-width: 20%;
+    width: 15%;
+    border-left: 2px solid black;
     margin-top: auto;
     margin-bottom: auto;
     z-index: 2;
 }
 
-.right-panel p {
-    margin: 0;
+.right-panel-info{
     padding: 5px;
-    background-color: #f0f0f0;
+}
+
+.right-panel-info h2{
+    text-align: center;
+}
+
+.right-panel-info div{
+    margin-top: 5px;
+}
+
+.right-panel-info input{
+    width: 120px;
+    padding: 2px;
+    font-size: 16px;
     border: 1px solid black;
-    z-index: 2;
+}
+
+#vertex-count{
+    display: inline-block;
+    width: 120px;
+    padding: 2px;
+    border: 1px solid black;
 }
 
 #glcanvas {
