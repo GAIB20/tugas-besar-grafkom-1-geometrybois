@@ -3,16 +3,25 @@ function createVertexShader(gl) {
     const vertexShaderSource =`
         // an attribute will receive data from a buffer
         attribute vec2 a_position;
+        uniform vec2 u_resolution;
+
+        uniform mat3 u_matrix;
+
+        // Color attribute
         attribute vec4 a_color;
         varying vec4 v_color;
-        uniform vec2 u_resolution;
         
         // all shaders have a main function
-        void main() {        
+        void main() {
+            // Multiply the position by the transformation matrix.
+            vec2 position = (u_matrix * vec3(a_position, 1)).xy;
+
             // convert the position from pixels to clipspace (-1, +1)
-            vec2 clipSpace = (a_position / u_resolution) * 2.0 - 1.0;
-            // gl_Position is a special variable a vertex shader
-            gl_Position = vec4(clipSpace,0,1);
+            vec2 clipSpace = (position / u_resolution) * 2.0 - 1.0;
+            
+            // gl_Position is a special global variable a vertex shader
+            // WebGL considers positive Y as up and negative Y as down. In clip space the bottom left corner -1,-1. We haven't changed any signs so with our current math 0, 0 becomes the bottom left corner.
+            gl_Position = vec4(clipSpace * vec2(1,-1) ,0,1);
             v_color = a_color;
         }
     `;
