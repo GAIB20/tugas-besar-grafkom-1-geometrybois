@@ -1,13 +1,42 @@
 "use strict";
-import Drawable from "./drawable.js";
+import Shape from "./shape.js";
+import ShapeTypes from "../type/shapeTypes.js";
 
-class Polygon extends Drawable{
+class Polygon extends Shape{
     static counter = 0;
-    constructor(gl, program, vertexCount, count, type="Polygon"){
-        super(gl,program, vertexCount, count, type);
-        this.setDrawAttributes(this._gl.LINE_LOOP);
-        this._id = "polygon#"+Polygon.counter;
-        Polygon.counter+=1;
+    constructor() {
+        let idName = "polygon#" + Polygon.counter;
+        super(idName, idName, ShapeTypes.POLYGON);
+    }
+
+    drawArraysMode(gl) {
+        return gl.TRIANGLES;
+    }
+
+    drawArraysCount() {
+        return 6;
+    }
+
+    getPositionBuffer() {
+        return new Float32Array([
+            200,200,
+            200,400,
+            500,200,
+            500,200,
+            200,400,
+            500,400
+        ]);
+    }
+
+    getColorBuffer() {
+        return new Float32Array([
+            1, 0, 0.5, 1,
+            1, 0, 0.5, 1,
+            0, 1, 0.5, 1,
+            1, 0, 0.5, 1,
+            0, 1, 0.5, 1,
+            0, 1, 0.5, 1
+        ]);
     }
 
 }
