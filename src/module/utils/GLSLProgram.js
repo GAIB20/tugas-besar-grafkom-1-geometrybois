@@ -38,7 +38,7 @@ class GLSLProgram {
      * @param {string} id - The id of the canvas element.
      * @returns {WebGLRenderingContext} - The WebGL rendering context.
      */
-    static getGLFromidCanvas(id) {
+    static getCanvasAndGLFromidCanvas(id) {
         const canvas = document.getElementById(id);
         const gl = canvas.getContext("webgl");
         
@@ -46,8 +46,8 @@ class GLSLProgram {
             console.error('WebGL is not available.');
             return null;
         }
-        return gl;
-    }      
+        return [canvas, gl];
+    }
 }
 
 export default GLSLProgram;

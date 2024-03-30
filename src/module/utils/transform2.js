@@ -1,6 +1,7 @@
-import Vector2 from "./Vector2";
+import Vector2 from "./Vector2.js";
 
 class Transform2 {
+
     /**
      * @returns {number[]}
      * @description Create an identity matrix
@@ -82,7 +83,8 @@ class Transform2 {
      * @returns {number[]}
      * @description Create a shear X matrix
      */
-    static shearX(shx) {
+    static shear(shx) {
+        if (shx === 0) return Transform2.identity();
         shx = 1 / Math.tan(shx);
         return [
             1, shx, 0,
@@ -91,19 +93,6 @@ class Transform2 {
         ];
     }
 
-    /**
-     * @param {number} shy in radians
-     * @returns {number[]}
-     * @description Create a shear Y matrix
-     */
-    static shearY(shy) {
-        shy = 1 / Math.tan(shy);
-        return [
-            1, 0, 0,
-            shy, 1, 0,
-            0, 0, 1
-        ];
-    }
 
     /**
      * @param {number[]} m1 
@@ -137,12 +126,8 @@ class Transform2 {
         return Transform2.multiply(matrix, Transform2.scaling(sx, sy));
     }
 
-    static shearX(matrix, shx) {
-        return Transform2.multiply(matrix, Transform2.shearX(shx));
-    }
-
-    static shearY(matrix, shy) {
-        return Transform2.multiply(matrix, Transform2.shearY(shy));
+    static shearing(matrix, shx) {
+        return Transform2.multiply(matrix, Transform2.shear(shx));
     }
 
     static general(
@@ -150,14 +135,15 @@ class Transform2 {
         tx, ty,
         angleInRadians,
         sx, sy,
-        shx, shy,
+        sh
     ) {
-        const matrix = Transform2.projection(width, height);
+
+        var matrix
+        matrix = Transform2.projection(width, height);
         matrix = Transform2.translate(matrix, tx, ty);
         matrix = Transform2.rotate(matrix, angleInRadians);
         matrix = Transform2.scale(matrix, sx, sy);
-        matrix = Transform2.shearX(matrix, shx);
-        matrix = Transform2.shearY(matrix, shy);
+        matrix = Transform2.shearing(matrix, sh);
         return matrix;
     }
 }
