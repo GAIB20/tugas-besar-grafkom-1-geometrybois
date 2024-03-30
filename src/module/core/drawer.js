@@ -6,6 +6,9 @@ import Rectangle from "../models/persegiPanjang.js";
 import createFragmentShader from "../shader/fragmentShader.js";
 import createVertexShader from "../shader/vertexShader.js";
 
+import GLDrawing from "../models/GLDrawing.js";
+import Shape from "../models/shape.js";
+
 function createProgram(gl, vertexShader, fragmentShader) {
     var program = gl.createProgram();
     gl.attachShader(program, vertexShader);
@@ -64,6 +67,15 @@ class Drawer {
         
         console.log(`canvas width: ${this.#gl.canvas.width} height: ${this.#gl.canvas.height}`);
 
+        // var matrix = [
+        //     1, 0, 0,
+        //     0, 1, 0,
+        //     0, 0, 1
+        // ];
+        // var matrixUniformLocation = this.#gl.getUniformLocation(this.#program, "u_matrix");
+        // this.#gl.uniformMatrix3fv(matrixUniformLocation, false, matrix);
+
+
         // Empty models and model Candidate
         this.models = [];
         this.modelCandidate = null;
@@ -86,7 +98,7 @@ class Drawer {
         if (modelType == "Garis") {
             model = new Garis(this.#gl, this.#program,3, 3);
             model.setPositions = [
-                800, 400,
+                100, 100,
                 800, 0,
                 0, 0,
             ];
@@ -107,7 +119,7 @@ class Drawer {
             ];
             model.setColors = [
                 1, 0, 0.5, 1,
-                1, 0, 0.5, 1,
+                0, 1, 0.5, 1,
                 1, 0, 0.5, 1,
             ];
             console.log("draw poligon");
@@ -117,20 +129,20 @@ class Drawer {
             var b1 = Math.random();
             var g1 = Math.random();
             model.setPositions = [
-                -400,200,
-                400, 200,
-          -400,  300,
-          400, 200,
-          -400,  300,
-          400,  300
+                0, 0,
+                400, 0,
+                400, 300,
+                0, 0,
+                400, 300,
+                0, 300
             ];
             model.setColors = [
                 r1, b1, g1, 1,
                 r1, b1, g1, 1,
                 r1, b1, g1, 1,
-                r1, b1, g1, 1,
-                r1, b1, g1, 1,
-                r1, b1, g1, 1,
+                b1, r1, g1, 1,
+                b1, r1, g1, 1,
+                b1, r1, g1, 1
             ];
             console.log("draw rectangle");
         }
@@ -138,7 +150,7 @@ class Drawer {
         this.modelCandidate = model;
 
         model.drawSetup();
-        console.log(model);
+        console.log("model", model);
         model.draw();
     }
 
