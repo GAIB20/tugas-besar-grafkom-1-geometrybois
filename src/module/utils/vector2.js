@@ -1,12 +1,8 @@
-class Vector2 {
-    constructor() {
-        this.x = 0;
-        this.y = 0;
-    }
+import Coordinate2D from "./coordinate2D.js";
 
+class Vector2 extends Coordinate2D {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
     }
 }
 
