@@ -30,6 +30,7 @@ var drawPolygonPanel =document.getElementById('draw-polygon');
 
 drawGarisPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.GARIS)});
 drawPolygonPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.POLYGON)});
+drawRectanglePanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.RECTANGLE)})
 
 canvas.addEventListener("click", (e)=>{handleCanvasClick(e)}); // Click suatu titik pada canvas
 canvas.addEventListener("mousemove", (e)=>{handleCanvasHover(e)}); // Mouse hovering di dalam canvas

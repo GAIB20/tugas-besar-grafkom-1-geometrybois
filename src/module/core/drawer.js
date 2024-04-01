@@ -9,6 +9,7 @@ import ShapeTypes from "../type/shapeTypes.js"
 import Shape from "../models/shape.js"
 import Garis from "../models/garis.js"
 import Polygon from "../models/polygon.js"
+import Rectangle from "../models/persegiPanjang.js"
 
 
 /**
@@ -93,6 +94,9 @@ class Drawer {
                 break;
             case ShapeTypes.POLYGON:
                 shape = new Polygon()
+                break;
+            case ShapeTypes.RECTANGLE:
+                shape = new Rectangle()
                 break;
             default:
                 console.error(`ShapeType ${shapeType} is not recognized`);
