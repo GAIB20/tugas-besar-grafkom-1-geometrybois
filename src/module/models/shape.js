@@ -68,11 +68,25 @@ class Shape extends Node2 {
     shear;
 
     /**
-     * @type {formed}
-     * @default 0
+     * @type {boolean}
+     * @default false
      * @description Determine if the shape is fully formed or not
      */
     formed;
+
+    /**
+     * @type {number}
+     * @default 0
+     * @description Angle of shape
+     */
+    angle;
+
+    /**
+     * @type {Point[]} vertices
+     * @description List of vertices
+     * @default []
+     */
+    vertices;
 
     constructor(id, name, shapeType) {
         super(id, name);
@@ -84,6 +98,8 @@ class Shape extends Node2 {
         this.rotationDegree = 0;
         this.shear = 0;
         this.formed = false;
+        this.angle = 0;
+        this.vertices = [];
     }
 
     /* Must be implemented in the derived class */

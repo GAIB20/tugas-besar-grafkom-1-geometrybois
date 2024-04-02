@@ -23,12 +23,7 @@ class Rectangle extends Shape{
     /**
      * @type {Object} vertices
      */
-    /**
-     * @type {Point[]}
-     * @description List of vertices
-     * @default []
-     */
-    vertices;
+    
     static counter = 0;
     constructor() {
         let idName = "rectangle#" + Rectangle.counter;
@@ -125,7 +120,26 @@ class Rectangle extends Shape{
             one = (idx + 1) % 4;
             three = (idx + 3) % 4;
         }
+        let theta = (this.angle * Math.PI) / 180;
+        let sin = Math.sin(theta);
+        let cos = Math.cos(theta);
 
+        let length = (y - this.vertices[two].y) * sin - (x - this.vertices[two].x) * cos;
+        let width = (y - this.vertices[two].y) * cos + (x - this.vertices[two].x) * sin;
+
+        let projectionLengthX = length * Math.cos(theta);
+        let projectionLengthY = length * Math.sin(theta);
+        let projectionWidthX = width * Math.cos(theta);
+        let projectionWidthY = width * Math.sin(theta);
+
+        this.vertices[idx].x = this.vertices[two].x - projectionLengthX + projectionWidthY;
+        this.vertices[idx].y = this.vertices[two].y + projectionLengthY + projectionWidthX;
+
+        this.vertices[one].x = this.vertices[two].x + projectionWidthY;
+        this.vertices[one].y = this.vertices[two].y + projectionWidthX;
+
+        this.vertices[three].x = this.vertices[two].x - projectionLengthX;
+        this.vertices[three].y = this.vertices[two].y + projectionLengthY;
     }
 
 }
