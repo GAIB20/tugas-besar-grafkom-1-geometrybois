@@ -12,8 +12,9 @@ class Garis extends Shape {
      */
     p2;
 
-    constructor(id, name) {
+    constructor(id, name, point) {
         super(id, name, ShapeTypes.LINES);
+
     }
 
 

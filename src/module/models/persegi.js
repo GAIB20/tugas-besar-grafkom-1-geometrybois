@@ -41,4 +41,4 @@ class Square extends Shape{
 
 }
 
-export default Rectangle;
+export default Square;

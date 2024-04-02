@@ -8,6 +8,7 @@ import Vector2 from "./module/utils/Vector2.js";
 const drawer = new Drawer2();
 
 function handleLeftPanelClick(event, shapeType){
+    
     drawer.startDrawShape(shapeType, new Vector2(event.clientX, event.clientY));
 }
 // State
@@ -23,6 +24,7 @@ var onDrawing = false;
 // Drawer
 
 // Left Panel
+var canvas = document.getElementById('glcanvas');
 var drawGarisPanel = document.getElementById('draw-garis');
 var drawPersegiPanel = document.getElementById('draw-persegi');
 var drawRectanglePanel = document.getElementById('draw-rectangle');
@@ -32,8 +34,8 @@ drawGarisPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTy
 drawPolygonPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.POLYGON)});
 drawRectanglePanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.RECTANGLE)})
 
-canvas.addEventListener("click", (e)=>{handleCanvasClick(e)}); // Click suatu titik pada canvas
-canvas.addEventListener("mousemove", (e)=>{handleCanvasHover(e)}); // Mouse hovering di dalam canvas
+// canvas.addEventListener("click", (e)=>{handleCanvasClick(e)}); // Click suatu titik pada canvas
+// canvas.addEventListener("mousemove", (e)=>{handleCanvasHover(e)}); // Mouse hovering di dalam canvas
 
 // Model (TODO: cari cara agar model yang sudah di render bisa listen)
 canvas.addEventListener("click", (event) => {
