@@ -51,15 +51,7 @@ class Drawer {
         var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
         gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-        var matrix = [
-            2 / gl.canvas.width, 0, 0,
-            0, -2 / gl.canvas.height, 0,
-            -1, 1, 1
-        ]
-        var matrixUniformLocation = gl.getUniformLocation(program, "u_matrix");
-        gl.uniformMatrix3fv(matrixUniformLocation, false, matrix);
-
-        this.Shapes = [];       
+       this.Shapes = [];       
     }
 
     drawAllShapes() {
@@ -69,11 +61,11 @@ class Drawer {
     }
 
     drawOneShape(shape) {
-        this.#addShape(shape);
+        this.addShape(shape);
         this.glDrawing.drawShape(shape);
     }
 
-    #addShape(shape) {
+    addShape(shape) {
         this.Shapes.push(shape);
     }
 
@@ -96,14 +88,14 @@ class Drawer {
                 shape = new Polygon()
                 break;
             case ShapeTypes.RECTANGLE:
-                shape = new Rectangle(mousePosition);
+                shape = new Rectangle();
                 break;
             default:
                 console.error(`ShapeType ${shapeType} is not recognized`);
                 return;
         }
 
-        this.#addShape(shape);
+        this.addShape(shape);
         this.glDrawing.drawShape(shape);
     }
         

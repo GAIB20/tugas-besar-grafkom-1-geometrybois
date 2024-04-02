@@ -67,6 +67,13 @@ class Shape extends Node2 {
      */
     shear;
 
+    /**
+     * @type {formed}
+     * @default 0
+     * @description Determine if the shape is fully formed or not
+     */
+    formed;
+
     constructor(id, name, shapeType) {
         super(id, name);
         this.shapeType = shapeType;
@@ -76,6 +83,7 @@ class Shape extends Node2 {
         this.rotation = 0;
         this.rotationDegree = 0;
         this.shear = 0;
+        this.formed = false;
     }
 
     /* Must be implemented in the derived class */
@@ -160,6 +168,8 @@ class Shape extends Node2 {
         gl.enableVertexAttribArray(AttributeLocation);
 
         gl.vertexAttribPointer(AttributeLocation, size, type, normalize, stride, offset);
+
+        this.formed = true;
     }
 
 
