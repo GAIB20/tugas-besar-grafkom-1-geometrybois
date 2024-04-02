@@ -82,7 +82,7 @@ const render = (type) => {
         gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
         drawer.addShape(object);
-        drawer.drawAllShapes(object);
+        drawer.glDrawing.drawShape(object);
     }
     canvas.addEventListener("click", function drawShape(event) {
         getCoordinates(event);
@@ -112,7 +112,7 @@ const render = (type) => {
             console.log("vertex 4: ", object.p4);
 
             drawer.addShape(object);
-            drawer.drawAllShapes(object);
+            drawer.glDrawing.drawShape(object);
 
             canvas.removeEventListener("mousemove", formRectangle)
             canvas.removeEventListener("click", drawShape)
