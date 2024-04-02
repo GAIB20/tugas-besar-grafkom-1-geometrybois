@@ -2,6 +2,7 @@
 import Shape from "./shape.js";
 import ShapeTypes from "../type/shapeTypes.js";
 import Point from "../utils/point.js";
+import Main from ""
 
 class Rectangle extends Shape{
     /**
@@ -87,6 +88,30 @@ class Rectangle extends Shape{
             1, 0, 0.5, 1,
             1, 0, 0.5, 1,
         ]);
+    }
+
+    // Move to shape later
+
+    isVertexClicked(x, y) {
+        let index = 0;
+        this.vertices.forEach((vertex) => {
+            var point = getPoints(vertex.x, vertex.y);
+            let topRightX = point[2]
+            let topRightY = point[3];
+            let bottomLeftX = point[6];
+            let bottomLeftY = point[7];
+
+            let left = Math.min(topRightX, bottomLeftX);
+            let right = Math.max(topRightX, bottomLeftX);
+            let bottom = Math.min(topRightY, bottomLeftY);
+            let top = Math.max(topRightY, bottomLeftY);
+
+            if (x >= left && x <= right && y >= bottom && y <= top) {
+                return index;
+            }
+            index++;
+        })
+        return -1;
     }
 
 }

@@ -165,16 +165,31 @@ function getPoints(x, y) {
     ]
 }
 
+const getShape = (event) => {
+    getCoordinates(event);
+    let selectedObject = null;
+    let vertexIndex = -1;
+
+    let index = object.checkVertex(coordX, coordY);
+    if (index != -1) {
+        selectedObject = object;
+        vertexIndex = index;
+    }
+    if (selectedObject == null) {
+        drawer.glDrawing.drawShape(object);
+        return null;
+    }
+    return {
+        selected: selectedObject,
+        vertexIndex: vertexIndex
+    }
+}
+
 let saveButton = document.getElementById("save-btn");
 saveButton.addEventListener("click", function saveObject() {
     saveModel(object);
     saveButton.removeEventListener("click", saveObject);
 });
-
-const getShape = (event) => {
-    getCoordinates(event);
-
-}
 
 function saveModel(object) {
     const filename = "object-file"
