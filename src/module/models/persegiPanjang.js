@@ -20,6 +20,10 @@ class Rectangle extends Shape{
      * @type {Point} p4
      */
     p4;
+    /**
+     * @type {Object} vertices
+     */
+    vertices;
     static counter = 0;
     constructor() {
         let idName = "rectangle#" + Rectangle.counter;
@@ -28,6 +32,7 @@ class Rectangle extends Shape{
         this.p2 = new Point(0, 0);
         this.p3 = new Point(0, 0);
         this.p4 = new Point(0, 0);
+        this.vertices = [this.p1, this.p2, this.p3, this.p4];
     }
 
     drawArraysMode(gl) {
@@ -43,6 +48,7 @@ class Rectangle extends Shape{
         this.p2 = p2;
         this.p3 = p3;
         this.p4 = p4;
+        this.vertices = [this.p1, this.p2, this.p3, this.p4];
     }
 
     // getPositionBuffer() {
