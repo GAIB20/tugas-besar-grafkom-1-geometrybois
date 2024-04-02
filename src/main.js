@@ -20,6 +20,11 @@ var currentState = STATE.IDLE;
 var onDrawing = false; 
 var coordX = 0;
 var coordY = 0;
+var startX = 0;
+var startY = 0;
+
+const glcanvas = document.getElementById("glcanvas");
+const gl = glcanvas.getContext("webgl")
 
 // Drawer
 
@@ -64,19 +69,32 @@ const render = (type) => {
         getCoordinates(e);
         console.log("Drag X:", coordX);
         console.log("Drag Y:", coordY);
+
+        let dragX = coordX;
+        let dragY = coordY;
+
+        let p1 = new Point(startX, startY);
+        let p2 = new Point(startX, dragY);
+        let p3 = new Point(dragX, startY);
+        let p4 = new Point(dragX, dragY);
+        object.setPoints(p1, p2, p3, p4);
+
+        gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+
+        drawer.addShape(object);
+        drawer.drawAllShapes(object);
     }
     canvas.addEventListener("click", function drawShape(event) {
         getCoordinates(event);
         console.log("Click X:", coordX);
         console.log("Click Y:", coordY);
-        let startX = coordX;
-        let startY = coordY;
+        startX = coordX;
+        startY = coordY;
 
         canvas.addEventListener("mousemove", formRectangle)
 
         canvas.addEventListener("mouseup", function stopFormingRectangle(e) {
-            canvas.removeEventListener("mousemove", formRectangle)
-            canvas.removeEventListener("click", drawShape)
+            
             getCoordinates(e);
             console.log("Stop forming X:", coordX);
             console.log("Stop forming Y:", coordY);
@@ -88,8 +106,17 @@ const render = (type) => {
             let p4 = new Point(endX, endY);
             object.setPoints(p1, p2, p3, p4);
 
+            console.log("vertex 1: ", object.p1);
+            console.log("vertex 2: ", object.p2);
+            console.log("vertex 3: ", object.p3);
+            console.log("vertex 4: ", object.p4);
+
             drawer.addShape(object);
             drawer.drawAllShapes(object);
+
+            canvas.removeEventListener("mousemove", formRectangle)
+            canvas.removeEventListener("click", drawShape)
+            canvas.removeEventListener("mouseup", stopFormingRectangle);
             
             
     
@@ -101,7 +128,6 @@ const render = (type) => {
 
 
 function getCoordinates(event) {
-    const glcanvas = document.getElementById("glcanvas");
     const rect = glcanvas.getBoundingClientRect();
     coordX = event.clientX - rect.left;
     coordY = event.clientY - rect.top;

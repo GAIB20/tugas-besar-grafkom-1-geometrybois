@@ -69,7 +69,7 @@ class GLDrawing {
         /* Setup Matrix Uniform */
         const matrix = Shape.getTransformationMatrix(this.#gl.canvas.width, this.#gl.canvas.height);
         
-        console.log("matrix: ", matrix)
+        // console.log("matrix: ", matrix)
 
         this.#gl.uniformMatrix3fv(this.#matrixUniformLocation, false, matrix);
 
