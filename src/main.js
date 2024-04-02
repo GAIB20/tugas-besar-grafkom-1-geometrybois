@@ -50,9 +50,14 @@ function handleLeftPanelClick(event, shapeType){
 //     console.log("state: ", currentState)
 // });
 
+function clearCanvas() {
+    drawer.clearShapes();
+}
+
 drawGarisPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.GARIS)});
 drawPolygonPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.POLYGON)});
 drawRectanglePanel.addEventListener('click', (e) => {
+    clearCanvas();
     // handleLeftPanelClick(e, ShapeTypes.RECTANGLE);
     render(ShapeTypes.RECTANGLE);
 })
@@ -66,6 +71,7 @@ const render = (type) => {
     if (type == ShapeTypes.RECTANGLE) {
         object = new Rectangle();
     }
+    // Draw point visual using Square()
     function drawPoint(object) {
         object.vertices.forEach((vertex) => {
             const point = getPoints(vertex.x, vertex.y);
@@ -74,12 +80,12 @@ const render = (type) => {
             let p2 = new Point(point[2], point[3]);
             let p3 = new Point(point[4], point[5]);
             let p4 = new Point(point[6], point[7]);
-            console.log("square p1: ", p1);
+            // console.log("square p1: ", p1);
             square.setPoints(p1, p2, p3, p4);
-            drawer.addShape(square);
             drawer.glDrawing.drawShape(square);
         })
     }
+    // Create rectangle while dragging
     function formRectangle(e) {
         getCoordinates(e);
         console.log("Drag X:", coordX);
@@ -96,10 +102,10 @@ const render = (type) => {
 
         gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
-        drawer.addShape(object);
         drawer.glDrawing.drawShape(object);
         drawPoint(object);
     }
+    // Init first point of rectangle
     canvas.addEventListener("click", function drawShape(event) {
         getCoordinates(event);
         console.log("Click X:", coordX);
@@ -109,6 +115,8 @@ const render = (type) => {
 
         canvas.addEventListener("mousemove", formRectangle)
 
+
+        // Click again to stop forming the rectangle
         canvas.addEventListener("mouseup", function stopFormingRectangle(e) {
             
             getCoordinates(e);
@@ -128,22 +136,20 @@ const render = (type) => {
             console.log("vertex 4: ", object.p4);
 
             drawer.addShape(object);
+
             drawer.glDrawing.drawShape(object);
             drawPoint(object);
+            console.log("shapes: ", drawer.Shapes);
 
             canvas.removeEventListener("mousemove", formRectangle)
             canvas.removeEventListener("click", drawShape)
             canvas.removeEventListener("mouseup", stopFormingRectangle);
-            
-            
-    
         })
         
     });
 }
 
-
-
+// Get current coordinate of cursor
 function getCoordinates(event) {
     const rect = glcanvas.getBoundingClientRect();
     coordX = (event.clientX - rect.left) / 1.6;
@@ -159,3 +165,7 @@ function getPoints(x, y) {
     ]
 }
 
+
+const getShape = (event) => {
+
+}
