@@ -165,6 +165,12 @@ function getPoints(x, y) {
     ]
 }
 
+function modifyVertex(event, selectedObject, index) {
+    getCoordinates(event);
+    selectedObject.resize(index, x, y);
+    drawer.glDrawing.drawShape(object);
+}
+
 const getShape = (event) => {
     getCoordinates(event);
     let selectedObject = null;

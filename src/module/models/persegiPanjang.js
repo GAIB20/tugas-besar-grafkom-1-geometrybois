@@ -2,7 +2,6 @@
 import Shape from "./shape.js";
 import ShapeTypes from "../type/shapeTypes.js";
 import Point from "../utils/point.js";
-import Main from ""
 
 class Rectangle extends Shape{
     /**
@@ -112,6 +111,21 @@ class Rectangle extends Shape{
             index++;
         })
         return -1;
+    }
+
+    resize(idx, x, y) {
+        let two = (idx + 2) % 4;
+        let one = 0;
+        let three = 0;
+
+        if (idx % 2 == 0) {
+            one = (idx + 3) % 4;
+            three = (idx + 1) % 4;
+        } else {
+            one = (idx + 1) % 4;
+            three = (idx + 3) % 4;
+        }
+
     }
 
 }
