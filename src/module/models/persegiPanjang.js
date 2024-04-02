@@ -23,6 +23,11 @@ class Rectangle extends Shape{
     /**
      * @type {Object} vertices
      */
+    /**
+     * @type {Point[]}
+     * @description List of vertices
+     * @default []
+     */
     vertices;
     static counter = 0;
     constructor() {

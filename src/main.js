@@ -23,6 +23,7 @@ var coordX = 0;
 var coordY = 0;
 var startX = 0;
 var startY = 0;
+var object;
 
 const glcanvas = document.getElementById("glcanvas");
 const gl = glcanvas.getContext("webgl")
@@ -67,7 +68,6 @@ drawRectanglePanel.addEventListener('click', (e) => {
 
 // Model (TODO: cari cara agar model yang sudah di render bisa listen)
 const render = (type) => {
-    let object;
     if (type == ShapeTypes.RECTANGLE) {
         object = new Rectangle();
     }
@@ -139,7 +139,7 @@ const render = (type) => {
 
             drawer.glDrawing.drawShape(object);
             drawPoint(object);
-            console.log("shapes: ", drawer.Shapes);
+            console.log("object: ", object);
 
             canvas.removeEventListener("mousemove", formRectangle)
             canvas.removeEventListener("click", drawShape)
@@ -165,7 +165,29 @@ function getPoints(x, y) {
     ]
 }
 
+let saveButton = document.getElementById("save-btn");
+saveButton.addEventListener("click", function saveObject() {
+    saveModel(object);
+    saveButton.removeEventListener("click", saveObject);
+});
 
 const getShape = (event) => {
+    getCoordinates(event);
 
+}
+
+function saveModel(object) {
+    const filename = "object-file"
+
+    const text = JSON.stringify(object);
+
+    const file = new Blob([text], {
+        type: "json/javascript",
+    });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(file);
+    link.download = `${filename}.json`;
+    link.click();
+    URL.revokeObjectURL(link.href);
 }
