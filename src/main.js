@@ -7,10 +7,6 @@ import Vector2 from "./module/utils/Vector2.js";
 
 const drawer = new Drawer2();
 
-function handleLeftPanelClick(event, shapeType){
-    
-    drawer.startDrawShape(shapeType, new Vector2(event.clientX, event.clientY));
-}
 // State
 const STATE =  Object.freeze({
     IDLE: 0,
@@ -20,6 +16,8 @@ const STATE =  Object.freeze({
 var currentState = STATE.IDLE;
 // Menyatakan apakah saat ini sedang menggambar (sudah ada vertex yang dibentuk, tetapi model belum jadi)
 var onDrawing = false; 
+var coordX = 0;
+var coordY = 0;
 
 // Drawer
 
@@ -29,6 +27,20 @@ var drawGarisPanel = document.getElementById('draw-garis');
 var drawPersegiPanel = document.getElementById('draw-persegi');
 var drawRectanglePanel = document.getElementById('draw-rectangle');
 var drawPolygonPanel =document.getElementById('draw-polygon');
+
+
+function handleLeftPanelClick(event, shapeType){
+    currentState = STATE.DRAWING;
+
+    console.log("Create shape X:", coordX);
+    console.log("Create shape Y:", coordY);
+    
+    drawer.startDrawShape(shapeType, new Vector2(coordX, coordY));
+}
+
+// canvas.addEventListener("click", (event) => {
+//     console.log("state: ", currentState)
+// });
 
 drawGarisPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.GARIS)});
 drawPolygonPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.POLYGON)});
@@ -41,9 +53,10 @@ drawRectanglePanel.addEventListener('click', (e) => {handleLeftPanelClick(e, Sha
 canvas.addEventListener("click", (event) => {
     const glcanvas = document.getElementById("glcanvas");
     const rect = glcanvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
-    console.log("Mouse X:", mouseX);
-    console.log("Mouse Y:", mouseY);
+    coordX = event.clientX - rect.left;
+    coordY = event.clientY - rect.top;
+    console.log("Mouse X:", coordX);
+    console.log("Mouse Y:", coordY);
 });
+
 

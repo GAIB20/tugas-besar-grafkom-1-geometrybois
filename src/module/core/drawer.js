@@ -96,7 +96,7 @@ class Drawer {
                 shape = new Polygon()
                 break;
             case ShapeTypes.RECTANGLE:
-                shape = new Rectangle()
+                shape = new Rectangle(mousePosition);
                 break;
             default:
                 console.error(`ShapeType ${shapeType} is not recognized`);

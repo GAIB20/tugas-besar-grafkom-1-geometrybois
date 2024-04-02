@@ -3,10 +3,27 @@ import Shape from "./shape.js";
 import ShapeTypes from "../type/shapeTypes.js";
 
 class Rectangle extends Shape{
+    /**
+     * @type {Point2D} p1
+     */
+    p1;
+    /**
+     * @type {Point2D} p2
+     */
+    p2;
+    /**
+     * @type {Point2D} p3
+     */
+    p3;
+    /**
+     * @type {Point2D} p4
+     */
+    p4;
     static counter = 0;
-    constructor() {
+    constructor(point) {
         let idName = "rectangle#" + Rectangle.counter;
         super(idName, idName, ShapeTypes.RECTANGLE);
+        this.p1 = point;
     }
 
     drawArraysMode(gl) {
