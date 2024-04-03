@@ -29,6 +29,13 @@ class Drawer {
      */
     Shapes;
 
+    /**
+     * @type {Shape}
+     * @description Shape being drawn
+     * @default null
+     */
+    shapeCandidate;
+
     constructor() {
         const [canvas, gl] = GLSLProgram.getCanvasAndGLFromidCanvas("glcanvas");
         const program = GLSLProgram.createProgram(gl);
@@ -42,8 +49,6 @@ class Drawer {
         gl.canvas.height = gl.canvas.clientHeight;
         gl.viewport(leftPanelWidth, 0, gl.canvas.width, gl.canvas.height);
 
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.useProgram(program);
@@ -51,7 +56,8 @@ class Drawer {
         var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
         gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-       this.Shapes = [];       
+       this.Shapes = [];
+       this.shapeCandidate = null;       
     }
 
     drawAllShapes() {
@@ -61,7 +67,6 @@ class Drawer {
     }
 
     drawOneShape(shape) {
-        this.addShape(shape);
         this.glDrawing.drawShape(shape);
     }
 
@@ -97,6 +102,35 @@ class Drawer {
 
         this.addShape(shape);
         this.glDrawing.drawShape(shape);
+    }
+
+    startFormShape(shapeType, mousePosition){
+        let shape = null;
+        switch (shapeType) {
+            case ShapeTypes.LINES:
+                shape = new Garis(0, "Garis1", mousePosition);
+                break;
+            case ShapeTypes.POLYGON:
+                shape = new Polygon();
+                shape.addPoint(mousePosition);
+                break;
+            case ShapeTypes.RECTANGLE:
+                shape = new Rectangle();
+                break;
+            default:
+                console.error(`ShapeType ${shapeType} is not recognized`);
+                return;
+        }
+        
+        this.shapeCandidate = shape;
+    }
+
+    drawShapeCandidate(){
+        this.drawOneShape(this.shapeCandidate);
+    }
+
+    clearShapeCandidate(){
+        this.shapeCandidate = null
     }
         
 }

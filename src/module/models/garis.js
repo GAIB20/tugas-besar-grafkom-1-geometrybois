@@ -12,9 +12,11 @@ class Garis extends Shape {
      */
     p2;
 
+    static counter = 0;
     constructor(id, name, point) {
-        super(id, name, ShapeTypes.LINES);
-
+        let idName = "line#" + Garis.counter;
+        super(id, idName, ShapeTypes.LINES);
+        Garis.counter++;
     }
 
 

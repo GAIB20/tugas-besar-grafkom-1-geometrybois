@@ -1,35 +1,71 @@
 "use strict"
+import ShapeTypes from "../type/shapeTypes.js";
 
 class DrawingInfo{
-    drawingObject;
+    /**
+     * @type {ShapeTypes}
+     * @description Type of shape being drawn
+    */    
+    shapeType;
+    /**
+     * @type {string}
+     * @description Color of shape being drawn in hex(?)
+    */    
     color;
+    /**
+     * @type {number}
+     * @description Max vertex of shape being drawn
+    */    
     maxVertex;
+    /**
+     * @type {number}
+     * @description Num vertex of shape being drawn
+    */  
     vertexCount;
-    constructor(drawingObject, color, maxVertex=null, vertexCount=null){
-        this.drawingObject = drawingObject;
+
+    constructor(){
+        this.drawingObject = null;
+        this.color = null;
+        this.maxVertex = null;
+        this.vertexCount = null;
+    }
+
+    setInfo(shapeType, color){
+        this.shapeType = shapeType;
         this.color = color;
-        this.maxVertex = maxVertex;
+
+        if (shapeType == "polygon"){
+            this.maxVertex = 3;
+            this.vertexCount = 0;
+        }
+    }
+
+    updateMaxVertex(maxVertex){
+        this.maxVertex =maxVertex;
+    }
+
+    updateVertexCount(vertexCount){
         this.vertexCount = vertexCount;
     }
 
     render(parentElement){
         parentElement.innerHTML = `
         <div class="right-panel-info">
-            <h2>Drawing ${this.drawingObject}</h2>
+            <h2>Drawing ${this.shapeType}</h2>
             <div>
                 <label for="color-picker">Color: </label>
                 <input type="color" id="color-picker" name="colorPicker" />
             </div>
 
             ${
-                this.drawingObject === "Polygon" ? 
+                this.shapeType === "polygon" ? 
                 `<div>
                     <label for="">Max Vertex: </label>
                     <input type="number" id="max-vertex" name="maxVertex">
                 </div>
                 <div>
                     <span>Vertex Count: </span>
-                    <span id="Vertex Count"> 5 </span>
+                    <span id="Vertex Count"> ${this.vertexCount} </span>
                 </div>
                 </div>`
                 :

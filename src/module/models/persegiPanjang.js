@@ -28,6 +28,7 @@ class Rectangle extends Shape{
     constructor() {
         let idName = "rectangle#" + Rectangle.counter;
         super(idName, idName, ShapeTypes.RECTANGLE);
+        Rectangle.counter++;
         this.p1 = new Point(0, 0);
         this.p2 = new Point(0, 0);
         this.p3 = new Point(0, 0);

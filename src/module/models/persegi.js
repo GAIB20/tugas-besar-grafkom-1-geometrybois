@@ -24,6 +24,7 @@ class Square extends Shape{
     constructor() {
         let idName = "square#" + Square.counter;
         super(idName, idName, ShapeTypes.SQUARE);
+        Square.counter++;
         this.p1 = new Point(0, 0);
         this.p2 = new Point(0, 0);
         this.p3 = new Point(0, 0);
