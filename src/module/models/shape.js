@@ -140,6 +140,15 @@ class Shape extends Node2 {
         );
     }
 
+    getPoints(x, y) {
+        return [
+            x - 5, y + 5,
+            x + 5, y + 5,
+            x - 5, y - 5,
+            x + 5, y - 5,
+        ]
+    }
+
     /**
      * Setup buffer for the shape
      * @param {WebGLRenderingContext} gl WebGL context

@@ -74,14 +74,8 @@ const render = (type) => {
     // Draw point visual using Square()
     function drawPoint(object) {
         object.vertices.forEach((vertex) => {
-            const point = getPoints(vertex.x, vertex.y);
-            const square = new Square();
-            let p1 = new Point(point[0], point[1]);
-            let p2 = new Point(point[2], point[3]);
-            let p3 = new Point(point[4], point[5]);
-            let p4 = new Point(point[6], point[7]);
-            // console.log("square p1: ", p1);
-            square.setPoints(p1, p2, p3, p4);
+            const point = object.getPoints(vertex.x, vertex.y);
+            const square = pointToSquare(point);
             drawer.glDrawing.drawShape(square);
         })
     }
@@ -150,19 +144,11 @@ const render = (type) => {
 }
 
 // Get current coordinate of cursor
+// TODO: Find the right coordinates for cursor, still not working :p
 function getCoordinates(event) {
     const rect = glcanvas.getBoundingClientRect();
-    coordX = (event.clientX - rect.left) / 1.6;
+    coordX = (event.clientX - rect.left) * 0.7;
     coordY = event.clientY - rect.top;
-}
-
-function getPoints(x, y) {
-    return [
-        x - 5, y + 5,
-        x + 5, y + 5,
-        x - 5, y - 5,
-        x + 5, y - 5,
-    ]
 }
 
 function modifyVertex(event, selectedObject, index) {
@@ -171,12 +157,27 @@ function modifyVertex(event, selectedObject, index) {
     drawer.glDrawing.drawShape(object);
 }
 
+function pointToSquare(point) {
+    const square = new Square();
+    let p1 = new Point(point[0], point[1]);
+    let p2 = new Point(point[2], point[3]);
+    let p3 = new Point(point[4], point[5]);
+    let p4 = new Point(point[6], point[7]);
+    // console.log("square p1: ", p1);
+    square.setPoints(p1, p2, p3, p4);
+    return square;
+}
+
+// Get current shape
 const getShape = (event) => {
     getCoordinates(event);
     let selectedObject = null;
     let vertexIndex = -1;
 
-    let index = object.checkVertex(coordX, coordY);
+    console.log("coord X: ", coordX);
+    console.log("coord Y: ", coordY);
+
+    let index = object.isVertexClicked(coordX, coordY);
     if (index != -1) {
         selectedObject = object;
         vertexIndex = index;
@@ -185,11 +186,52 @@ const getShape = (event) => {
         drawer.glDrawing.drawShape(object);
         return null;
     }
+    console.log("selected: ", selectedObject);
     return {
         selected: selectedObject,
         vertexIndex: vertexIndex
     }
 }
+
+// Click on the current shape
+canvas.addEventListener("click", (e) => {
+    let shape = getShape(e);
+
+    if (shape) {
+        let selectedObject = shape["selected"];
+        let vertexIndex = shape["vertexIndex"];
+
+        let point = selectedObject.getPoints(selectedObject.vertices[vertexIndex].x, selectedObject.vertices[vertexIndex].y);
+
+        const square = pointToSquare(point);
+        drawer.glDrawing.drawShape(square);
+
+    }
+})
+
+
+// Drag current shape that has been formed
+canvas.addEventListener("mousedown", (e) => {
+    let shape = getShape(e);
+
+    if (shape) {
+        console.log("clicked object: ", shape)
+        let selectedObject = shape["selected"];
+        let vertexIndex = shape["vertexIndex"];
+
+        function dragCurrentShape(e) {
+            modifyVertex(e, selectedObject, vertexIndex);
+        }
+
+        canvas.addEventListener("mousemove", dragCurrentShape);
+        canvas.addEventListener("mouseup", function end() {
+            canvas.removeEventListener("mousemove", modifyVertex);
+            canvas.removeEventListener("mouseup", end);
+        })
+
+    }
+})
+
 
 let saveButton = document.getElementById("save-btn");
 saveButton.addEventListener("click", function saveObject() {
