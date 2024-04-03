@@ -13,28 +13,28 @@ class Garis extends Shape {
     p2;
 
     static counter = 0;
-    constructor(id, name, point) {
+    constructor() {
         let idName = "line#" + Garis.counter;
-        super(id, idName, ShapeTypes.LINES);
+        super(0, idName, ShapeTypes.LINES);
         Garis.counter++;
     }
 
 
     drawArraysMode(gl) {
-        return gl.TRIANGLES;
+        return gl.POINTS;
     }
 
     drawArraysCount() {
-        return 6;
+        return 3;
     }
 
     getPositionBuffer() {
         return new Float32Array([
-            0, 0,
-            400, 0,
-            400, 300,
-            0, 0,
-            400, 300,
+            205, 144,
+            453, 211,
+            720, 326,
+            696, 134,
+            400, 500,
             0, 300
         ]);
     }
