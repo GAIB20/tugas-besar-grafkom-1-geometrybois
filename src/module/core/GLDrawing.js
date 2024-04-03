@@ -75,8 +75,6 @@ class GLDrawing {
         const primitiveType = Shape.drawArraysMode(this.#gl)
         const offset = 0;
         const count = Shape.drawArraysCount(this.#gl);
-
-        console.log("count:", count, "primitive type:", primitiveType);
         this.#gl.drawArrays(primitiveType, offset, count);
     }
 

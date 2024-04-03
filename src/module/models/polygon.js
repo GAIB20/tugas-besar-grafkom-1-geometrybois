@@ -19,6 +19,10 @@ class Polygon extends Shape{
         this.vertices.push(point)
     }
 
+    updateLastPoint(point){
+        this.vertices[this.vertices.length-1] = point;
+    }
+
     removePoint(){
         point = this.vertices.pop()
         return point

@@ -1,15 +1,9 @@
 import DrawingInfo from "./module/components/drawingInfo.js";
-import ModelInfo from "./module/components/modelInfo.js";
-import GLDrawing from "./module/core/GLDrawing.js";
 import Drawer from "./module/core/drawer.js";
-import Square from "./module/models/persegi.js";
-import Rectangle from "./module/models/persegiPanjang.js";
-import Polygon from "./module/models/polygon.js";
-import Garis from "./module/models/garis.js";
 import ShapeTypes from "./module/type/shapeTypes.js";
-import Vector2 from "./module/utils/Vector2.js";
 import Point from "./module/utils/point.js";
-
+import ClickedShapeInfo from "./module/components/clickedShapeInfo.js";
+import Rectangle from "./module/models/persegiPanjang.js";
 
 /* State */
 const STATE =  Object.freeze({
@@ -17,17 +11,14 @@ const STATE =  Object.freeze({
     DRAW: "Draw",
     ONDRAWING: "OnDrawing", 
     EDIT: "Edit",
+    ONEDITING: "OnEditing",
 })
 var currentState = STATE.IDLE;
 
+console.log("initial state", currentState)
+
 var coordX = 0;
 var coordY = 0;
-var startX = 0;
-var startY = 0;
-var object;
-
-const glcanvas = document.getElementById("glcanvas");
-const gl = glcanvas.getContext("webgl")
 
 /* Drawer */
 const drawer = new Drawer();
@@ -61,16 +52,23 @@ function handleLeftPanelClick(event, shapeType){
 
 drawGarisPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.LINES)});
 drawPolygonPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.POLYGON)});
-drawRectanglePanel.addEventListener('click', (e) => {
-    clearCanvas();
-    // handleLeftPanelClick(e, ShapeTypes.RECTANGLE);
-    render(ShapeTypes.RECTANGLE);
-})
+drawRectanglePanel.addEventListener('click', (e) => { handleLeftPanelClick(e, ShapeTypes.RECTANGLE);})
 
 /* Right Panel */
-var rightPanelWidth = (document.querySelector('.right-panel')).offsetWidth;
 var rightPanel = document.querySelector(".right-panel");
-var drawingInfo = new DrawingInfo()
+var drawingInfo = new DrawingInfo();
+var clickedShapeInfo = new ClickedShapeInfo();
+
+function updateDrawingInfo(){
+    drawingInfo.updateVertexCount(drawer.shapeCandidate.drawArraysCount());
+    drawingInfo.setMaxVertex(drawingInfo.getMaxVertex());
+    drawingInfo.render(rightPanel);
+}
+
+function resetRightPanel(){
+    drawingInfo.setInfo(null, null);
+    rightPanel.innerHTML = "";
+}
 
 
 /* Canvas */
@@ -82,209 +80,125 @@ function handleCanvasClick(event){
     if (currentState == STATE.DRAW){
         currentState = STATE.ONDRAWING
         drawer.startFormShape(drawingInfo.shapeType, new Point(coordX, coordY));
-    } else if (currentState == STATE.ONDRAWING){
-        // Jika merupakan shape polygon, tambah vertex
+        drawer.drawShapeCandidate();
+
         if (drawingInfo.shapeType == ShapeTypes.POLYGON){
-            drawer.shapeCandidate.addPoint(new Point(coordX, coordY));
-            drawer.shapeCandidate.setCount(drawer.shapeCandidate.drawArraysCount()+1);
+            // Perbarui Drawing Info
+            updateDrawingInfo();
+        }
+
+        console.log("Shapes:", drawer.Shapes);
+    } else if (currentState == STATE.ONDRAWING){
+        if (drawingInfo.shapeType == ShapeTypes.POLYGON){
+            // Jika merupakan shape polygon, tambah vertex 
+            drawer.shapeCandidate.updateLastPoint(new Point(coordX, coordY));
+
+            // Draw polygon terupdate
             drawer.drawShapeCandidate();
-            drawingInfo.updateVertexCount(drawer.shapeCandidate.drawArraysCount());
-            drawingInfo.render(rightPanel);
-        } else {
-            drawer.drawShapeCandidate();
+            
+            // Perbarui Right Panel Info
+            updateDrawingInfo();
+
+            // apabila count == maxVertex, shape terbentuk
+            if (drawer.shapeCandidate.drawArraysCount() == drawingInfo.getMaxVertex()){
+                // Masukkan shape yang terbentuk ke dalam list shape
+                drawer.moveCandidatetoShape();
+                currentState = STATE.DRAW;
+                resetRightPanel();
+            }
+
+        } else { 
+            // Jika selain shape polygon, shape terbentuk
+            if (drawingInfo.shapeType == ShapeTypes.RECTANGLE){
+                // Update points sehingga sesuai posisi terakhir
+                drawer.shapeCandidate.updatePoints(new Point(coordX, coordY));
+                drawer.drawShapeCandidate();
+            }
+
+            // Masukkan shape yang terbentuk ke dalam list shape
+            drawer.moveCandidatetoShape();
+            currentState = STATE.IDLE;
+            resetRightPanel();
+        }
+    }  else if (currentState = STATE.IDLE){
+        // Jika Idle dilakukan pengecekan apakah ada vertex model yang diclick
+        let shape = drawer.getShapeAndVertexClicked()
+        if (shape["shapeClicked"] != null){
+            console.log("shape detected:", shape);
+            // Terdapat model yang diklik
+            clickedShapeInfo.shape = shape["shapeClicked"];
+            clickedShapeInfo.vertexIdx = shape["vertexIdx"];
+
+            // Change current state to EDIT
+            currentState = STATE.EDIT;
+
+            drawer.drawPoints(clickedShapeInfo.shape);
         }
     }
 }
 
-function handleCanvasHover(event){
+function handleCanvasMouseMove(event){
+    updateCursorCoordinates(event);
     if (currentState == STATE.ONDRAWING){
         // Lakukan proses menggambar saat mousemove
+        if (drawingInfo.shapeType == ShapeTypes.RECTANGLE){
+            // Update posisi titik pada rectangle
+            drawer.shapeCandidate.updatePoints(new Point(coordX, coordY));
+            drawer.drawShapeCandidate();
+        } else if (drawingInfo.shapeType == ShapeTypes.POLYGON){
+            // Update titik terakhir pada polygon jika telah ada titik sementara
+            if (drawingInfo.vertexCount < drawer.shapeCandidate.vertices.length){
+                drawer.shapeCandidate.updateLastPoint(new Point(coordX, coordY));
+            } else if (drawingInfo.vertexCount == drawer.shapeCandidate.vertices.length){
+                drawer.shapeCandidate.addPoint(new Point(coordX, coordY));
+                drawer.shapeCandidate.setCount(drawer.shapeCandidate.drawArraysCount()+1);
+            }
+            drawer.drawShapeCandidate();
+        }
+    } else if (currentState == STATE.ONEDITING){
+        if (clickedShapeInfo.shape instanceof Rectangle){
+            modifyVertex(event, clickedShapeInfo.shape, clickedShapeInfo.vertexIdx);
+        }
+    }
+}
+
+function handleCanvasMouseDown(event){
+    if (currentState == STATE.EDIT){
+        // Ubah jadi onEditing
+        currentState = STATE.ONEDITING;
+    }
+}
+
+function handleCanvasMouseUp(event){
+    if (currentState == STATE.ONEDITING){
+        // Ubah jadi onEditing
+        currentState = STATE.EDIT;
     }
 }
 
 canvas.addEventListener("click", (event) => {handleCanvasClick(event)});
-canvas.addEventListener("mousemove", (event) => {handleCanvasHover(event)})
-
-function clearCanvas() {
-    drawer.clearShapes();
-}
-
-
-// canvas.addEventListener("click", (e)=>{handleCanvasClick(e)}); // Click suatu titik pada canvas
-// canvas.addEventListener("mousemove", (e)=>{handleCanvasHover(e)}); // Mouse hovering di dalam canvas
+canvas.addEventListener("mousemove", (event) => {handleCanvasMouseMove(event)})
+canvas.addEventListener("mousedown", (event)=> {handleCanvasMouseDown(event)})
+canvas.addEventListener("mouseup", (event)=> {handleCanvasMouseUp(event)})
 
 // Model (TODO: cari cara agar model yang sudah di render bisa listen)
-const render = (type) => {
-    if (type == ShapeTypes.RECTANGLE) {
-        object = new Rectangle();
-    }
-    // Draw point visual using Square()
-    function drawPoint(object) {
-        object.vertices.forEach((vertex) => {
-            const point = object.getPoints(vertex.x, vertex.y);
-            const square = pointToSquare(point);
-            drawer.glDrawing.drawShape(square);
-        })
-    }
-    // Create rectangle while dragging
-    function formRectangle(e) {
-        updateCursorCoordinates(e);
-        console.log("Drag X:", coordX);
-        console.log("Drag Y:", coordY);
 
-        let dragX = coordX;
-        let dragY = coordY;
-
-        let p1 = new Point(startX, startY);
-        let p2 = new Point(startX, dragY);
-        let p3 = new Point(dragX, startY);
-        let p4 = new Point(dragX, dragY);
-        object.setPoints(p1, p2, p3, p4);
-
-        gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-
-        drawer.glDrawing.drawShape(object);
-        drawPoint(object);
-    }
-    // Init first point of rectangle
-    canvas.addEventListener("click", function drawShape(event) {
-        updateCursorCoordinates(event);
-        console.log("Click X:", coordX);
-        console.log("Click Y:", coordY);
-        startX = coordX;
-        startY = coordY;
-
-        canvas.addEventListener("mousemove", formRectangle)
-
-
-        // Click again to stop forming the rectangle
-        canvas.addEventListener("mouseup", function stopFormingRectangle(e) {
-            
-            updateCursorCoordinates(e);
-            console.log("Stop forming X:", coordX);
-            console.log("Stop forming Y:", coordY);
-            let endX = coordX;
-            let endY = coordY;
-            let p1 = new Point(startX, startY);
-            let p2 = new Point(startX, endY);
-            let p3 = new Point(endX, startY);
-            let p4 = new Point(endX, endY);
-            object.setPoints(p1, p2, p3, p4);
-
-            console.log("vertex 1: ", object.p1);
-            console.log("vertex 2: ", object.p2);
-            console.log("vertex 3: ", object.p3);
-            console.log("vertex 4: ", object.p4);
-
-            drawer.addShape(object);
-
-            drawer.glDrawing.drawShape(object);
-            drawPoint(object);
-            console.log("object: ", object);
-
-            canvas.removeEventListener("mousemove", formRectangle)
-            canvas.removeEventListener("click", drawShape)
-            canvas.removeEventListener("mouseup", stopFormingRectangle);
-        })
-        
-    });
-}
-
+/* User Interface */
 // Get current coordinate of cursor
 function updateCursorCoordinates(event) {
-    const rect = glcanvas.getBoundingClientRect();
-    coordX = (event.clientX - leftPanelWidth)*(1- (rightPanelWidth+leftPanelWidth)/window.innerWidth);
-    coordY = event.clientY - rect.top;
-    console.log(`x:${coordX}, y:${coordY}`);
+    coordX = (event.clientX - leftPanelWidth)*(1- (rightPanel.offsetWidth+leftPanelWidth)/window.innerWidth);
+    coordY = event.clientY;
+    // console.log(`x:${coordX}, y:${coordY}`);
 }
 
 function modifyVertex(event, selectedObject, index) {
     updateCursorCoordinates(event);
-    selectedObject.resize(index, x, y);
-    drawer.glDrawing.drawShape(object);
+    selectedObject.resize(index, coordX, coordY);
+    drawer.drawOneShape(selectedObject);
 }
 
-function pointToSquare(point) {
-    const square = new Square();
-    let p1 = new Point(point[0], point[1]);
-    let p2 = new Point(point[2], point[3]);
-    let p3 = new Point(point[4], point[5]);
-    let p4 = new Point(point[6], point[7]);
-    // console.log("square p1: ", p1);
-    square.setPoints(p1, p2, p3, p4);
-    return square;
-}
-
-// Get current shape
-const getShape = (event) => {
-    updateCursorCoordinates(event);
-    let selectedObject = null;
-    let vertexIndex = -1;
-
-    console.log("coord X: ", coordX);
-    console.log("coord Y: ", coordY);
-
-    let index = object.isVertexClicked(coordX, coordY);
-    if (index != -1) {
-        selectedObject = object;
-        vertexIndex = index;
-    }
-    if (selectedObject == null) {
-        drawer.glDrawing.drawShape(object);
-        return null;
-    }
-    console.log("selected: ", selectedObject);
-    return {
-        selected: selectedObject,
-        vertexIndex: vertexIndex
-    }
-}
-
-// Click on the current shape
-canvas.addEventListener("click", (e) => {
-    let shape = getShape(e);
-
-    if (shape) {
-        let selectedObject = shape["selected"];
-        let vertexIndex = shape["vertexIndex"];
-
-        let point = selectedObject.getPoints(selectedObject.vertices[vertexIndex].x, selectedObject.vertices[vertexIndex].y);
-
-        const square = pointToSquare(point);
-        drawer.glDrawing.drawShape(square);
-
-    }
-})
-
-
-// Drag current shape that has been formed
-canvas.addEventListener("mousedown", (e) => {
-    let shape = getShape(e);
-
-    if (shape) {
-        console.log("clicked object: ", shape)
-        let selectedObject = shape["selected"];
-        let vertexIndex = shape["vertexIndex"];
-
-        function dragCurrentShape(e) {
-            modifyVertex(e, selectedObject, vertexIndex);
-        }
-
-        canvas.addEventListener("mousemove", dragCurrentShape);
-        canvas.addEventListener("mouseup", function end() {
-            canvas.removeEventListener("mousemove", modifyVertex);
-            canvas.removeEventListener("mouseup", end);
-        })
-
-    }
-})
-
-
+// Save Model
 let saveButton = document.getElementById("save-btn");
-saveButton.addEventListener("click", function saveObject() {
-    saveModel(object);
-    saveButton.removeEventListener("click", saveObject);
-});
 
 function saveModel(object) {
     const filename = "object-file"
@@ -301,3 +215,5 @@ function saveModel(object) {
     link.click();
     URL.revokeObjectURL(link.href);
 }
+
+saveButton.addEventListener("click", (e) => {saveModel(clickedShapeInfo)});
