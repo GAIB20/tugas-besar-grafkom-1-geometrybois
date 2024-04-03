@@ -129,10 +129,11 @@ class Drawer {
         this.clearShapeCandidate();
     }
 
-    getShapeAndVertexClicked(){
+    getShapeAndVertexClicked(x, y){
         let idx = this.Shapes.length-1;
         while (idx >= 0 ){
-            let vertexIdx = this.Shapes[idx].getVertexClicked();
+            let vertexIdx = this.Shapes[idx].getVertexClicked(x, y);
+            console.log("model:", this.Shapes[idx], "vertex id:", vertexIdx);
             if (vertexIdx != -1){
                 return {shapeClicked: this.Shapes[idx], vertexIdx: vertexIdx}
             }

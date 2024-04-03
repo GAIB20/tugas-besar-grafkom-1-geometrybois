@@ -103,7 +103,7 @@ function handleCanvasClick(event){
             if (drawer.shapeCandidate.drawArraysCount() == drawingInfo.getMaxVertex()){
                 // Masukkan shape yang terbentuk ke dalam list shape
                 drawer.moveCandidatetoShape();
-                currentState = STATE.DRAW;
+                currentState = STATE.IDLE;
                 resetRightPanel();
             }
 
@@ -122,7 +122,8 @@ function handleCanvasClick(event){
         }
     }  else if (currentState = STATE.IDLE){
         // Jika Idle dilakukan pengecekan apakah ada vertex model yang diclick
-        let shape = drawer.getShapeAndVertexClicked()
+        let shape = drawer.getShapeAndVertexClicked(coordX, coordY);
+        console.log(`cursor x: ${coordX}, y: ${coordY}`);
         if (shape["shapeClicked"] != null){
             console.log("shape detected:", shape);
             // Terdapat model yang diklik
@@ -132,6 +133,7 @@ function handleCanvasClick(event){
             // Change current state to EDIT
             currentState = STATE.EDIT;
 
+            drawer.drawAllShapes();
             drawer.drawPoints(clickedShapeInfo.shape);
         }
     }

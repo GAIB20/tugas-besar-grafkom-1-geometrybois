@@ -131,9 +131,11 @@ class Shape extends Node2 {
     
     /**
      * @abstract
+     * @param {number} x cursor x coordinate
+     * @param {number} y cursor y coordinate
      * @returns {number} index of clicked vertex, -1 if not clicked
     */
-    getVertexClicked() { console.error(`getVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
+    getVertexClicked(x,y) { console.error(`getVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
     
     
     /* ======================================== */

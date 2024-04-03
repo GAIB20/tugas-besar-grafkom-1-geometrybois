@@ -67,6 +67,19 @@ class Polygon extends Shape{
         return buffer;
     }
 
+    getVertexClicked(x, y){
+        let i = 0;
+        while (i < this.vertices.length){
+            // Cek apakah termasuk jangkauan vertices
+            console.log(`cursor dalam x: ${x} y: ${y}    vertex x: ${this.vertices[i].x}, y: ${this.vertices[i].y}`)
+            if (((x >= (this.vertices[i].x - 5)) && (x <= (this.vertices[i].x +5))) && ((y >= (this.vertices[i].y-5)) && (y <= (this.vertices[i].y+5)))){
+                return i
+            }
+            i++;
+        }
+        return -1;
+    }
+
 }
 
 export default Polygon;
