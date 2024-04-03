@@ -32,12 +32,8 @@ class Polygon extends Shape{
         this.count = count;
     }
 
-    getCount(){
-        return this.count;
-    }
-
     drawArraysMode(gl) {
-        return gl.LINE_LOOP;
+        return (this.count < 3) ? gl.LINES : gl.TRIANGLE_FAN;
     }
 
     drawArraysCount() {
@@ -48,23 +44,23 @@ class Polygon extends Shape{
         var buffer = new Float32Array(this.count*2);
         
         for (let i =0; i<(this.count); i++){
-            console.log("vertices: ", this.vertices[i]);
             buffer[i*2] = this.vertices[i].x;
-            buffer[i*2+1] = this.vertices[i].x;
+            buffer[i*2+1] = this.vertices[i].y;
         }
-
         return buffer;
     }
 
     getColorBuffer() {
-        return new Float32Array([
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-        ]);
+        var buffer = new Float32Array(this.count*4);
+        
+        for (let i =0; i<(this.count); i++){
+            buffer[i*4] = 1;
+            buffer[i*4+1] = 0;
+            buffer[i*4+2] = 0.5;
+            buffer[i*4+3] = 1;
+        }
+
+        return buffer;
     }
 
 }

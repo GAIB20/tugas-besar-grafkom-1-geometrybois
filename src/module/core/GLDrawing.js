@@ -68,8 +68,6 @@ class GLDrawing {
 
         /* Setup Matrix Uniform */
         const matrix = Shape.getTransformationMatrix(this.#gl.canvas.width, this.#gl.canvas.height);
-        
-        // console.log("matrix: ", matrix)
 
         this.#gl.uniformMatrix3fv(this.#matrixUniformLocation, false, matrix);
 
@@ -77,6 +75,8 @@ class GLDrawing {
         const primitiveType = Shape.drawArraysMode(this.#gl)
         const offset = 0;
         const count = Shape.drawArraysCount(this.#gl);
+
+        console.log("count:", count, "primitive type:", primitiveType);
         this.#gl.drawArrays(primitiveType, offset, count);
     }
 

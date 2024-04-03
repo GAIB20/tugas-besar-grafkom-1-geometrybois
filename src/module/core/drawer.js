@@ -39,6 +39,7 @@ class Drawer {
     constructor() {
         const [canvas, gl] = GLSLProgram.getCanvasAndGLFromidCanvas("glcanvas");
         const program = GLSLProgram.createProgram(gl);
+        const undetectedOffset = 15;
         this.glDrawing = new GLDrawing(gl, program);
 
         var leftPanelWidth = (document.querySelector('.left-panel')).offsetWidth;
@@ -47,7 +48,7 @@ class Drawer {
         console.log(`window: ${window.innerWidth}, ${window.innerHeight}`);
         gl.canvas.width = gl.canvas.clientWidth - leftPanelWidth - rightPanelWidth;
         gl.canvas.height = gl.canvas.clientHeight;
-        gl.viewport(leftPanelWidth, 0, gl.canvas.width, gl.canvas.height);
+        gl.viewport(leftPanelWidth-undetectedOffset, 0, gl.canvas.width, gl.canvas.height);
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -68,6 +69,7 @@ class Drawer {
 
     drawOneShape(shape) {
         this.glDrawing.drawShape(shape);
+        console.log(shape);
     }
 
     addShape(shape) {
@@ -87,7 +89,7 @@ class Drawer {
         let shape = null;
         switch (shapeType) {
             case ShapeTypes.GARIS:
-                shape = new Garis(0, "Garis1", mousePosition);
+                shape = new Garis();
                 break;
             case ShapeTypes.POLYGON:
                 shape = new Polygon()

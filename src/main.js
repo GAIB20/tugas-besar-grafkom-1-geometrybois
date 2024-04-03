@@ -1,8 +1,11 @@
 import DrawingInfo from "./module/components/drawingInfo.js";
 import ModelInfo from "./module/components/modelInfo.js";
+import GLDrawing from "./module/core/GLDrawing.js";
 import Drawer from "./module/core/drawer.js";
 import Square from "./module/models/persegi.js";
 import Rectangle from "./module/models/persegiPanjang.js";
+import Polygon from "./module/models/polygon.js";
+import Garis from "./module/models/garis.js";
 import ShapeTypes from "./module/type/shapeTypes.js";
 import Vector2 from "./module/utils/Vector2.js";
 import Point from "./module/utils/point.js";
@@ -74,22 +77,21 @@ var drawingInfo = new DrawingInfo()
 var canvas = document.getElementById('glcanvas');
 
 function handleCanvasClick(event){
+    updateCursorCoordinates(event);
     // Jika current state draw, inisiasi titik awal dan masuk state OnDrawing
     if (currentState == STATE.DRAW){
         currentState = STATE.ONDRAWING
-        console.log("current state: " + currentState);
-        updateCursorCoordinates(event)
         drawer.startFormShape(drawingInfo.shapeType, new Point(coordX, coordY));
-        console.log("Candidate: ", drawer.shapeCandidate);
     } else if (currentState == STATE.ONDRAWING){
         // Jika merupakan shape polygon, tambah vertex
         if (drawingInfo.shapeType == ShapeTypes.POLYGON){
-            updateCursorCoordinates(event);
-            let p = new Point(1,2)
             drawer.shapeCandidate.addPoint(new Point(coordX, coordY));
-            drawer.shapeCandidate.setCount(drawer.shapeCandidate.getCount()+1);
+            drawer.shapeCandidate.setCount(drawer.shapeCandidate.drawArraysCount()+1);
             drawer.drawShapeCandidate();
-            drawingInfo.updateVertexCount(drawer.shapeCandidate.getCount())
+            drawingInfo.updateVertexCount(drawer.shapeCandidate.drawArraysCount());
+            drawingInfo.render(rightPanel);
+        } else {
+            drawer.drawShapeCandidate();
         }
     }
 }
@@ -193,6 +195,7 @@ function updateCursorCoordinates(event) {
     const rect = glcanvas.getBoundingClientRect();
     coordX = (event.clientX - leftPanelWidth)*(1- (rightPanelWidth+leftPanelWidth)/window.innerWidth);
     coordY = event.clientY - rect.top;
+    console.log(`x:${coordX}, y:${coordY}`);
 }
 
 function modifyVertex(event, selectedObject, index) {
