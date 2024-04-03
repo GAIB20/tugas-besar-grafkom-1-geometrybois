@@ -90,7 +90,7 @@ class Rectangle extends Shape{
     isVertexClicked(x, y) {
         let index = 0;
         this.vertices.forEach((vertex) => {
-            var point = getPoints(vertex.x, vertex.y);
+            var point = this.getPoints(vertex.x, vertex.y);
             let topRightX = point[2]
             let topRightY = point[3];
             let bottomLeftX = point[6];
