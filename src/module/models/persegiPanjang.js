@@ -89,24 +89,25 @@ class Rectangle extends Shape{
 
     isVertexClicked(x, y) {
         let index = 0;
-        this.vertices.forEach((vertex) => {
+        for (let vertex of this.vertices) {
             var point = this.getPoints(vertex.x, vertex.y);
-            let topRightX = point[2]
-            let topRightY = point[3];
-            let bottomLeftX = point[6];
-            let bottomLeftY = point[7];
+            let topRightX = point[4]
+            let topRightY = point[5];
+            let bottomLeftX = point[3];
+            let bottomLeftY = point[2];
 
             let left = Math.min(topRightX, bottomLeftX);
             let right = Math.max(topRightX, bottomLeftX);
-            let bottom = Math.min(topRightY, bottomLeftY);
-            let top = Math.max(topRightY, bottomLeftY);
+            let bottom = Math.max(topRightY, bottomLeftY);
+            let top = Math.min(topRightY, bottomLeftY);
 
-            if (x >= left && x <= right && y >= bottom && y <= top) {
+            if (x >= left && x <= right && y <= bottom && y >= top) {
                 return index;
             }
             index++;
-        })
+        }
         return -1;
+        
     }
 
     resize(idx, x, y) {

@@ -109,6 +109,15 @@ function clearCanvas() {
     drawer.clearShapes();
 }
 
+// Draw point visual using Square()
+function drawPoint(object) {
+    object.vertices.forEach((vertex) => {
+        const point = object.getPoints(vertex.x, vertex.y);
+        const square = pointToSquare(point);
+        drawer.glDrawing.drawShape(square);
+    })
+}
+
 
 // canvas.addEventListener("click", (e)=>{handleCanvasClick(e)}); // Click suatu titik pada canvas
 // canvas.addEventListener("mousemove", (e)=>{handleCanvasHover(e)}); // Mouse hovering di dalam canvas
@@ -118,14 +127,7 @@ const render = (type) => {
     if (type == ShapeTypes.RECTANGLE) {
         object = new Rectangle();
     }
-    // Draw point visual using Square()
-    function drawPoint(object) {
-        object.vertices.forEach((vertex) => {
-            const point = object.getPoints(vertex.x, vertex.y);
-            const square = pointToSquare(point);
-            drawer.glDrawing.drawShape(square);
-        })
-    }
+    
     // Create rectangle while dragging
     function formRectangle(e) {
         updateCursorCoordinates(e);
@@ -200,7 +202,7 @@ function updateCursorCoordinates(event) {
 
 function modifyVertex(event, selectedObject, index) {
     updateCursorCoordinates(event);
-    selectedObject.resize(index, x, y);
+    selectedObject.resize(index, coordX, coordY);
     drawer.glDrawing.drawShape(object);
 }
 
@@ -243,15 +245,14 @@ const getShape = (event) => {
 // Click on the current shape
 canvas.addEventListener("click", (e) => {
     let shape = getShape(e);
+    console.log("shape: ", shape);
 
     if (shape) {
         let selectedObject = shape["selected"];
         let vertexIndex = shape["vertexIndex"];
+        drawPoint(object);
 
-        let point = selectedObject.getPoints(selectedObject.vertices[vertexIndex].x, selectedObject.vertices[vertexIndex].y);
-
-        const square = pointToSquare(point);
-        drawer.glDrawing.drawShape(square);
+        
 
     }
 })
