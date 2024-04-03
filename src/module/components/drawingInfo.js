@@ -40,8 +40,13 @@ class DrawingInfo{
         }
     }
 
-    updateMaxVertex(maxVertex){
-        this.maxVertex =maxVertex;
+    setMaxVertex(maxVertex){
+        this.maxVertex = maxVertex;
+    }
+
+    getMaxVertex(){
+        const maxVertexInput = document.getElementById('max-vertex');
+        return maxVertexInput.value;
     }
 
     updateVertexCount(vertexCount){
@@ -61,7 +66,7 @@ class DrawingInfo{
                 this.shapeType === "polygon" ? 
                 `<div>
                     <label for="">Max Vertex: </label>
-                    <input type="number" id="max-vertex" name="maxVertex">
+                    <input type="number" id="max-vertex" name="maxVertex" min="${Math.max(3, this.vertexCount+1)}" value="${this.maxVertex}">
                 </div>
                 <div>
                     <span>Vertex Count: </span>

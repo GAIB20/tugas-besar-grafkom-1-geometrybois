@@ -39,7 +39,6 @@ class Rectangle extends Shape{
         this.p2 = new Point(0, 0);
         this.p3 = new Point(0, 0);
         this.p4 = new Point(0, 0);
-        console.log("startpoint:", startPoint)
         this.startPoint = startPoint;
         this.vertices = [this.p1, this.p2, this.p3, this.p4];
     }
@@ -92,7 +91,7 @@ class Rectangle extends Shape{
 
     // Move to shape later
 
-    isVertexClicked(x, y) {
+    getVertexClicked(x, y) {
         let index = 0;
         for (let vertex of this.vertices) {
             var point = this.getPoints(vertex.x, vertex.y);
@@ -107,11 +106,11 @@ class Rectangle extends Shape{
             let top = Math.min(topRightY, bottomLeftY);
 
             if (x >= left && x <= right && y <= bottom && y >= top) {
-                return {shape: this, index:index};
+                return index;
             }
             index++;
         }
-        return {shape: null, index: -1};
+        return -1;
     }
 
     resize(idx, x, y) {

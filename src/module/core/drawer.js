@@ -116,6 +116,7 @@ class Drawer {
     }
 
     drawShapeCandidate(){
+        this.drawAllShapes();
         this.drawOneShape(this.shapeCandidate);
     }
 
@@ -126,6 +127,18 @@ class Drawer {
     moveCandidatetoShape(){
         this.addShape(this.shapeCandidate);
         this.clearShapeCandidate();
+    }
+
+    getShapeAndVertexClicked(){
+        let idx = this.Shapes.length-1;
+        while (idx >= 0 ){
+            let vertexIdx = this.Shapes[idx].getVertexClicked();
+            if (vertexIdx != -1){
+                return {shapeClicked: this.Shapes[idx], vertexIdx: vertexIdx}
+            }
+            idx--;
+        }
+        return {shapeClicked: null, vertexIdx: -1}
     }
 
     pointToSquare(point) {

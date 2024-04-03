@@ -131,9 +131,9 @@ class Shape extends Node2 {
     
     /**
      * @abstract
-     * @returns {Shape, index} Color buffer
+     * @returns {number} index of clicked vertex, -1 if not clicked
     */
-    isVertexClicked() { console.error(`isVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
+    getVertexClicked() { console.error(`getVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
     
     
     /* ======================================== */
