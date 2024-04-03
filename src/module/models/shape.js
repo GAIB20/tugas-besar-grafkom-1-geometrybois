@@ -128,6 +128,14 @@ class Shape extends Node2 {
      * @returns {Float32Array} Color buffer
     */
     getColorBuffer() { console.error(`getColorBuffer in class Shape is not implemented in class ${this.constructor.name}`); }
+    
+    /**
+     * @abstract
+     * @returns {Shape, index} Color buffer
+    */
+    isVertexClicked() { console.error(`isVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
+    
+    
     /* ======================================== */
 
     getTransformationMatrix(width, height) {

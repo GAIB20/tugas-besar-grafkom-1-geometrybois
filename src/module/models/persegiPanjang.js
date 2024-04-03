@@ -23,9 +23,15 @@ class Rectangle extends Shape{
     /**
      * @type {Object} vertices
      */
+
+    /**
+     * @type {Point} startPoint
+     */
+    startPoint;
+
     
     static counter = 0;
-    constructor() {
+    constructor(startPoint) {
         let idName = "rectangle#" + Rectangle.counter;
         super(idName, idName, ShapeTypes.RECTANGLE);
         Rectangle.counter++;
@@ -33,6 +39,8 @@ class Rectangle extends Shape{
         this.p2 = new Point(0, 0);
         this.p3 = new Point(0, 0);
         this.p4 = new Point(0, 0);
+        console.log("startpoint:", startPoint)
+        this.startPoint = startPoint;
         this.vertices = [this.p1, this.p2, this.p3, this.p4];
     }
 
@@ -52,16 +60,13 @@ class Rectangle extends Shape{
         this.vertices = [this.p1, this.p2, this.p3, this.p4];
     }
 
-    // getPositionBuffer() {
-    //     return new Float32Array([
-    //         150,150, // p1
-    //         150,350, // p2
-    //         550,150, // p3
-    //         550,150, // p3
-    //         150,350, // p2
-    //         550,350 // p4
-    //     ]);
-    // }
+    updatePoints(dragPoint){
+        this.p1 = new Point(this.startPoint.x, this.startPoint.y);
+        this.p2 = new Point(this.startPoint.x, dragPoint.y);
+        this.p3 = new Point(dragPoint.x, this.startPoint.y);
+        this.p4 = new Point(dragPoint.x, dragPoint.y);
+        this.vertices = [this.p1, this.p2, this.p3, this.p4];
+    }
 
     getPositionBuffer() {
         return new Float32Array([
@@ -89,24 +94,24 @@ class Rectangle extends Shape{
 
     isVertexClicked(x, y) {
         let index = 0;
-        this.vertices.forEach((vertex) => {
+        for (let vertex of this.vertices) {
             var point = this.getPoints(vertex.x, vertex.y);
-            let topRightX = point[2]
-            let topRightY = point[3];
-            let bottomLeftX = point[6];
-            let bottomLeftY = point[7];
+            let topRightX = point[4]
+            let topRightY = point[5];
+            let bottomLeftX = point[3];
+            let bottomLeftY = point[2];
 
             let left = Math.min(topRightX, bottomLeftX);
             let right = Math.max(topRightX, bottomLeftX);
-            let bottom = Math.min(topRightY, bottomLeftY);
-            let top = Math.max(topRightY, bottomLeftY);
+            let bottom = Math.max(topRightY, bottomLeftY);
+            let top = Math.min(topRightY, bottomLeftY);
 
-            if (x >= left && x <= right && y >= bottom && y <= top) {
-                return index;
+            if (x >= left && x <= right && y <= bottom && y >= top) {
+                return {shape: this, index:index};
             }
             index++;
-        })
-        return -1;
+        }
+        return {shape: null, index: -1};
     }
 
     resize(idx, x, y) {

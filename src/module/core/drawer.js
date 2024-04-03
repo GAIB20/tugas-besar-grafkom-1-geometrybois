@@ -9,8 +9,9 @@ import ShapeTypes from "../type/shapeTypes.js"
 import Shape from "../models/shape.js"
 import Garis from "../models/garis.js"
 import Polygon from "../models/polygon.js"
+import Square from "../models/persegi.js"
 import Rectangle from "../models/persegiPanjang.js"
-
+import Point from "../utils/point.js"
 
 /**
  * @class Drawer2
@@ -67,9 +68,17 @@ class Drawer {
         });
     }
 
+    drawPoints(shape){
+        shape.vertices.forEach((vertex) => {
+            const point = shape.getPoints(vertex.x, vertex.y);
+            const square = this.pointToSquare(point);
+            this.glDrawing.drawShape(square);
+        })
+    }
+
     drawOneShape(shape) {
         this.glDrawing.drawShape(shape);
-        console.log(shape);
+        this.drawPoints(shape);
     }
 
     addShape(shape) {
@@ -85,27 +94,6 @@ class Drawer {
         this.glDrawing.clear();
     }
 
-    startDrawShape(shapeType, mousePosition) {
-        let shape = null;
-        switch (shapeType) {
-            case ShapeTypes.GARIS:
-                shape = new Garis();
-                break;
-            case ShapeTypes.POLYGON:
-                shape = new Polygon()
-                break;
-            case ShapeTypes.RECTANGLE:
-                shape = new Rectangle();
-                break;
-            default:
-                console.error(`ShapeType ${shapeType} is not recognized`);
-                return;
-        }
-
-        this.addShape(shape);
-        this.glDrawing.drawShape(shape);
-    }
-
     startFormShape(shapeType, mousePosition){
         let shape = null;
         switch (shapeType) {
@@ -117,7 +105,7 @@ class Drawer {
                 shape.addPoint(mousePosition);
                 break;
             case ShapeTypes.RECTANGLE:
-                shape = new Rectangle();
+                shape = new Rectangle(mousePosition);
                 break;
             default:
                 console.error(`ShapeType ${shapeType} is not recognized`);
@@ -133,6 +121,22 @@ class Drawer {
 
     clearShapeCandidate(){
         this.shapeCandidate = null
+    }
+
+    moveCandidatetoShape(){
+        this.addShape(this.shapeCandidate);
+        this.clearShapeCandidate();
+    }
+
+    pointToSquare(point) {
+        const square = new Square();
+        let p1 = new Point(point[0], point[1]);
+        let p2 = new Point(point[2], point[3]);
+        let p3 = new Point(point[4], point[5]);
+        let p4 = new Point(point[6], point[7]);
+        // console.log("square p1: ", p1);
+        square.setPoints(p1, p2, p3, p4);
+        return square;
     }
         
 }
