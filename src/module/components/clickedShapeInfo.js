@@ -1,7 +1,14 @@
 "use strict"
 import Shape from "../models/shape.js";
+import Drawer from "../core/drawer.js";
 
 class ClickedShapeInfo{
+    /**
+     * @type {Drawer}
+     * @description drawer
+    */ 
+    drawer;
+
     /**
      * @type {Shape}
      * @description shape being edited
@@ -26,6 +33,13 @@ class ClickedShapeInfo{
      */    
     maxVertex;
     
+    constructor(drawer){
+        this.shape = null;
+        this.color = null;
+        this.maxVertex = null;
+        this.vertexCount = null;
+        this.drawer = drawer;
+    }
 
     setInfo(shape, vertexIdx, color){
         this.shape = shape;
@@ -33,8 +47,7 @@ class ClickedShapeInfo{
         this.color = color;
 
         if ( /^polygon/.test(this.shape.id)){
-            this.maxVertex = 3;
-            this.vertexCount = 0;
+            this.maxVertex = this.shape.drawArraysCount();
         }
     }
 
@@ -51,8 +64,63 @@ class ClickedShapeInfo{
         this.vertexCount = vertexCount;
     }
 
+    // Listener handler function
+    #handleModelColorPicker(color){
+        // Set semua point yang ada untuk memiliki warna color
+    }
+
+    #handleMaxVertexInput(maxVertex){
+        // Update max vertex
+        this.maxVertex = maxVertex;
+        this.drawer.drawAllShapes();
+    }
+
+    #handleTranslationXInput(tranlationX){
+        // Update Origin Translation X-axis
+        this.shape.originTranslation.x = tranlationX;
+        console.log(this.drawer);
+        this.drawer.drawAllShapes();
+    }
+
+    #handleTranslationYInput(tranlationY){
+        // Update Origin Translation y-axis
+        this.shape.originTranslation.y = tranlationY;
+        this.drawer.drawAllShapes();
+    }
+    
+    #handleRotationInput(rotationDegree){
+        // Update rotation Degree
+        this.shape.rotationDegree = rotationDegree;
+        this.drawer.drawAllShapes();
+    }
+    
+    #handleDilationXInput(dilationX){
+        // Update Scale X-axis
+        this.shape.scale.x = dilationX;
+        this.drawer.drawAllShapes();
+    }
+
+    #handleDilationYInput(dilationY){
+        // Update Scale y-axis
+        this.shape.scale.y = dilationY;
+        this.drawer.drawAllShapes();
+    }
+    
+    #handleVertexColorPicker(color){
+        // Set point yang diklik untuk memiliki warna color
+        
+    }
+
+    #handleDeletePoint(vertexIdx){
+        if (vertexIdx == this.vertexIdx){
+            this.vertexIdx = 0;
+        } 
+        
+    }
+
 
     render(parentElement){
+        
         parentElement.innerHTML = `
         <div class="right-panel-info">
             <h2>Editing ${this.shape.id}</h2>
@@ -68,7 +136,8 @@ class ClickedShapeInfo{
                         /^polygon/.test(this.shape.id) ? 
                     `<div>
                         <label for="">Max Vertex: </label>
-                        <input type="number" id="max-vertex" name="maxVertex" min="${Math.max(3, this.shape.drawArraysCount())}" value="${this.maxVertex}">
+                        <input type="number" id="max-vertex" name="maxVertex" min="${Math.max(3, this.shape.drawArraysCount())}" 
+                        value="${this.maxVertex}" >
                     </div>
                     <div>
                         <span>Vertex Count: </span>
@@ -140,16 +209,30 @@ class ClickedShapeInfo{
                             <input type="number" id="index-point-input" name="indexPointInput" value="${this.vertexIdx}" min="0"
                                 max="${this.shape.drawArraysCount()-1}">
                         </div>
-                        <button>Delete Point</button>
+                        <button id="delete-point-button">Delete Point</button>
+                        </div>
                         `
                         :
-                        `<div> </div>`
+                        `</div>`
                     }
                 `
                 :
-                `<div> </div>`
+                `</div>`
             }
-            `   
+            `;
+            this.listen();
+        }
+        
+    listen(){
+        document.getElementById("color-picker").addEventListener("input" , (e) => {this.#handleModelColorPicker(document.getElementById("color-picker").value)})
+        document.getElementById("max-vertex").addEventListener("input" , (e) => {this.#handleMaxVertexInput(document.getElementById("max-vertex").value)})
+        document.getElementById("translationXInput").addEventListener("input" , (e) => {this.#handleTranslationXInput(document.getElementById("translationXInput").value)})
+        document.getElementById("translationYInput").addEventListener("input" , (e) => {this.#handleTranslationYInput(document.getElementById("translationYInput").value)})
+        document.getElementById("rotationInput").addEventListener("input" , (e) => {this.#handleRotationInput(document.getElementById("rotationInput").value)})
+        document.getElementById("dilationXInput").addEventListener("input" , (e) => {this.#handleDilationXInput(document.getElementById("dilationXInput").value)})
+        document.getElementById("dilationYInput").addEventListener("input" , (e) => {this.#handleDilationYInput(document.getElementById("dilationYInput").value)})
+        document.getElementById("color-picker-point").addEventListener("input" , (e) => {this.#handleVertexColorPicker(document.getElementById("color-picker-point").value)})
+        document.getElementById("delete-point-button").addEventListener("input" , (e) => {this.#handleDeletePoint(document.getElementById("index-point-input").value)})
     }
 }
 

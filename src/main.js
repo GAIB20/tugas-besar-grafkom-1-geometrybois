@@ -57,7 +57,7 @@ drawRectanglePanel.addEventListener('click', (e) => { handleLeftPanelClick(e, Sh
 /* Right Panel */
 var rightPanel = document.querySelector(".right-panel");
 var drawingInfo = new DrawingInfo();
-var clickedShapeInfo = new ClickedShapeInfo();
+var clickedShapeInfo = new ClickedShapeInfo(drawer);
 
 function updateDrawingInfo(){
     drawingInfo.updateVertexCount(drawer.shapeCandidate.drawArraysCount());
