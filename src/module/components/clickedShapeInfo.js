@@ -228,10 +228,8 @@ class ClickedShapeInfo{
         
     listen(){
         document.getElementById("color-picker").addEventListener("input" , (e) => {this.#handleModelColorPicker(document.getElementById("color-picker").value)})
-        if (document.getElementById("max-vertex")) {
+        if (this.shape.shapeType == ShapeTypes.POLYGON) {
             document.getElementById("max-vertex").addEventListener("input" , (e) => {this.#handleMaxVertexInput(document.getElementById("max-vertex").value)})
-        }
-        if (document.getElementById("delete-point-button")) {
             document.getElementById("delete-point-button").addEventListener("input" , (e) => {this.#handleDeletePoint(document.getElementById("index-point-input").value)})
         }
         document.getElementById("translationXInput").addEventListener("input" , (e) => {this.#handleTranslationXInput(document.getElementById("translationXInput").value)})
