@@ -76,16 +76,18 @@ class ClickedShapeInfo{
         this.drawer.drawAllShapes();
     }
 
-    #handleTranslationXInput(tranlationX){
+    #handleTranslationXInput(translationX){
         // Update Origin Translation X-axis
-        this.shape.originTranslation.x = tranlationX;
+        this.shape.originTranslation.x = translationX;
+        this.shape.translateXVertices(translationX);
         console.log(this.drawer);
         this.drawer.drawAllShapes();
     }
 
-    #handleTranslationYInput(tranlationY){
+    #handleTranslationYInput(translationY){
         // Update Origin Translation y-axis
-        this.shape.originTranslation.y = tranlationY;
+        this.shape.originTranslation.y = translationY;
+        this.shape.translateYVertices(translationY);
         this.drawer.drawAllShapes();
     }
     
@@ -226,8 +228,10 @@ class ClickedShapeInfo{
         
     listen(){
         document.getElementById("color-picker").addEventListener("input" , (e) => {this.#handleModelColorPicker(document.getElementById("color-picker").value)})
-        if (this.shape.shapeType == ShapeTypes.POLYGON) {
+        if (document.getElementById("max-vertex")) {
             document.getElementById("max-vertex").addEventListener("input" , (e) => {this.#handleMaxVertexInput(document.getElementById("max-vertex").value)})
+        }
+        if (document.getElementById("delete-point-button")) {
             document.getElementById("delete-point-button").addEventListener("input" , (e) => {this.#handleDeletePoint(document.getElementById("index-point-input").value)})
         }
         document.getElementById("translationXInput").addEventListener("input" , (e) => {this.#handleTranslationXInput(document.getElementById("translationXInput").value)})

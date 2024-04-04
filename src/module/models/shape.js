@@ -159,6 +159,18 @@ class Shape extends Node2 {
         ]
     }
 
+    translateXVertices(x) {
+        this.vertices.forEach(vertex => {
+            vertex.x += parseFloat(x);
+        })
+    }
+
+    translateYVertices(y) {
+        this.vertices.forEach(vertex => {
+            vertex.y += parseFloat(y);
+        })
+    }
+
     /**
      * Setup buffer for the shape
      * @param {WebGLRenderingContext} gl WebGL context
