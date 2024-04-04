@@ -28,10 +28,6 @@ class Polygon extends Shape{
         return point
     }
 
-    setPoints(points){
-        this.vertices = points
-    }
-
     setCount(count){
         this.count = count;
     }
@@ -58,10 +54,10 @@ class Polygon extends Shape{
         var buffer = new Float32Array(this.count*4);
         
         for (let i =0; i<(this.count); i++){
-            buffer[i*4] = 1;
-            buffer[i*4+1] = 0;
-            buffer[i*4+2] = 0.5;
-            buffer[i*4+3] = 1;
+            buffer[i*4] = this.vertices[i].color.r;
+            buffer[i*4+1] = this.vertices[i].color.g;
+            buffer[i*4+2] = this.vertices[i].color.b;
+            buffer[i*4+3] = this.vertices[i].color.a;
         }
 
         return buffer;

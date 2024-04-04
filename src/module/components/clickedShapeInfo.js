@@ -2,6 +2,7 @@
 import Shape from "../models/shape.js";
 import Drawer from "../core/drawer.js";
 import ShapeTypes from "../type/shapeTypes.js";
+import Color from "../utils/color.js";
 
 class ClickedShapeInfo{
     /**
@@ -68,6 +69,9 @@ class ClickedShapeInfo{
     // Listener handler function
     #handleModelColorPicker(color){
         // Set semua point yang ada untuk memiliki warna color
+        let rgbaVal = Color.hexToRgba(color, 1);
+        this.shape.setColor(new Color(rgbaVal.r, rgbaVal.g, rgbaVal.b, rgbaVal.a));
+        this.drawer.drawAllShapes();
     }
 
     #handleMaxVertexInput(maxVertex){
@@ -111,7 +115,9 @@ class ClickedShapeInfo{
     
     #handleVertexColorPicker(color){
         // Set point yang diklik untuk memiliki warna color
-        
+        let rgbaVal = Color.hexToRgba(color, 1);
+        this.shape.setVertexColor(this.vertexIdx, new Color(rgbaVal.r, rgbaVal.g, rgbaVal.b, rgbaVal.a));
+        this.drawer.drawAllShapes();
     }
 
     #handleDeletePoint(vertexIdx){
@@ -200,7 +206,7 @@ class ClickedShapeInfo{
                     </div>
                     <div>
                         <label for="color-picker-point">Color: </label>
-                        <input type="color" id="color-picker-point" name="colorPickerPoint" />
+                        <input type="color" id="color-picker-point" name="colorPickerPoint" value="${this.shape.vertices[this.vertexIdx].color.getHexRepresentation()}"/>
                     </div>
 
                     ${

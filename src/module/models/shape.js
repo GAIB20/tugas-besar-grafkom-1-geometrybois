@@ -4,6 +4,7 @@ import Transform2 from "../utils/transform2.js";
 
 import ShapeTypes from "../type/shapeTypes.js";
 import BufferType from "../type/bufferType.js";
+import Point from "../utils/point.js";
 
 /**
  * @class Shape
@@ -137,6 +138,24 @@ class Shape extends Node2 {
     */
     getVertexClicked(x,y) { console.error(`getVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
     
+    /* ====== SETTER ====== */
+    setPoints(points){
+        this.vertices = points;
+    }
+
+    // Set all vertices to the same color
+    setColor(color){
+        for (let vertex of this.vertices){
+            console.log(vertex);
+            vertex.setColor(color);
+        }
+    }   
+
+    // Set specific vertex's color to color
+    setVertexColor(idx, color){
+        this.vertices[idx].setColor(color);
+    }
+
     
     /* ======================================== */
 
