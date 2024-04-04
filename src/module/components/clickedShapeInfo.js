@@ -1,6 +1,7 @@
 "use strict"
 import Shape from "../models/shape.js";
 import Drawer from "../core/drawer.js";
+import ShapeTypes from "../type/shapeTypes.js";
 
 class ClickedShapeInfo{
     /**
@@ -225,14 +226,16 @@ class ClickedShapeInfo{
         
     listen(){
         document.getElementById("color-picker").addEventListener("input" , (e) => {this.#handleModelColorPicker(document.getElementById("color-picker").value)})
-        document.getElementById("max-vertex").addEventListener("input" , (e) => {this.#handleMaxVertexInput(document.getElementById("max-vertex").value)})
+        if (this.shape.shapeType == ShapeTypes.POLYGON) {
+            document.getElementById("max-vertex").addEventListener("input" , (e) => {this.#handleMaxVertexInput(document.getElementById("max-vertex").value)})
+            document.getElementById("delete-point-button").addEventListener("input" , (e) => {this.#handleDeletePoint(document.getElementById("index-point-input").value)})
+        }
         document.getElementById("translationXInput").addEventListener("input" , (e) => {this.#handleTranslationXInput(document.getElementById("translationXInput").value)})
         document.getElementById("translationYInput").addEventListener("input" , (e) => {this.#handleTranslationYInput(document.getElementById("translationYInput").value)})
         document.getElementById("rotationInput").addEventListener("input" , (e) => {this.#handleRotationInput(document.getElementById("rotationInput").value)})
         document.getElementById("dilationXInput").addEventListener("input" , (e) => {this.#handleDilationXInput(document.getElementById("dilationXInput").value)})
         document.getElementById("dilationYInput").addEventListener("input" , (e) => {this.#handleDilationYInput(document.getElementById("dilationYInput").value)})
         document.getElementById("color-picker-point").addEventListener("input" , (e) => {this.#handleVertexColorPicker(document.getElementById("color-picker-point").value)})
-        document.getElementById("delete-point-button").addEventListener("input" , (e) => {this.#handleDeletePoint(document.getElementById("index-point-input").value)})
     }
 }
 
