@@ -34,6 +34,12 @@ class ClickedShapeInfo{
      * @description Max vertex of shape being drawn
      */    
     maxVertex;
+
+    /**
+     * @type {number}
+     * @description Num vertex of shape being drawn
+     */    
+    vertexCount;
     
     constructor(drawer){
         this.shape = null;
@@ -50,6 +56,7 @@ class ClickedShapeInfo{
 
         if ( /^polygon/.test(this.shape.id)){
             this.maxVertex = this.shape.drawArraysCount();
+            this.vertexCount = this.maxVertex;
         }
     }
 
@@ -150,7 +157,7 @@ class ClickedShapeInfo{
                     </div>
                     <div>
                         <span>Vertex Count: </span>
-                        <span id="Vertex Count"> ${this.shape.drawArraysCount()} </span>
+                        <span id="Vertex Count"> ${this.vertexCount} </span>
                     </div>
                     `
                     :
@@ -194,6 +201,10 @@ class ClickedShapeInfo{
                 this.vertexIdx!=null ? `
                     <h3> Point Properties </h3>
                     <div>
+                        <div> 
+                            <span>Index: </span>
+                            <span id="positionX" class="right-panel-attribute"> ${this.vertexIdx} </span>
+                        </div>
                         <p>Position</p>
                         <div> 
                             <span>X: </span>

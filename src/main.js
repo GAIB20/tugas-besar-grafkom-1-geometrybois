@@ -3,7 +3,6 @@ import Drawer from "./module/core/drawer.js";
 import ShapeTypes from "./module/type/shapeTypes.js";
 import Point from "./module/utils/point.js";
 import ClickedShapeInfo from "./module/components/clickedShapeInfo.js";
-import Rectangle from "./module/models/persegiPanjang.js";
 
 /* State */
 const STATE =  Object.freeze({
@@ -137,6 +136,19 @@ function handleCanvasClick(event){
             drawer.drawAllShapes();
             drawer.drawPoints(clickedShapeInfo.shape);
         }
+    } else if (currentState = STATE.EDIT){
+        if (clickedShapeInfo.shape.shapeType == ShapeTypes.POLYGON){
+            // Jika polygon lakukan penambahan titik apabila memungkinkan 
+            if (clickedShapeInfo.vertexCount < clickedShapeInfo.getMaxVertex()){
+                clickedShapeInfo.shape.updateLastPoint(new Point(coordX, coordY));
+                drawer.drawAllShapes();
+                clickedShapeInfo.vertexCount++;
+                clickedShapeInfo.render(rightPanel);
+            } else {
+                // Kembali ke state edit
+                currentState = STATE.EDIT;
+            }
+        }
     }
 }
 
@@ -159,9 +171,25 @@ function handleCanvasMouseMove(event){
             drawer.drawShapeCandidate();
         }
     } else if (currentState == STATE.ONEDITING){
-        if (clickedShapeInfo.shape instanceof Rectangle){
+        if (clickedShapeInfo.shape.shapeType == ShapeTypes.RECTANGLE){
             modifyVertex(event, clickedShapeInfo.shape, clickedShapeInfo.vertexIdx);
+        } else if (clickedShapeInfo.shape.shapeType == ShapeTypes.POLYGON){
+            // Update titik terakhir pada polygon jika telah ada titik sementara
+            if (clickedShapeInfo.vertexCount < clickedShapeInfo.shape.vertices.length){
+                clickedShapeInfo.shape.updateLastPoint(new Point(coordX, coordY));
+            } else if (clickedShapeInfo.vertexCount == clickedShapeInfo.shape.vertices.length){
+                clickedShapeInfo.shape.addPoint(new Point(coordX, coordY));
+                clickedShapeInfo.shape.setCount(clickedShapeInfo.shape.drawArraysCount()+1);
+            }
+            drawer.drawShapeCandidate();
         }
+    } else if (currentState == STATE.EDIT){
+        if (clickedShapeInfo.shape.shapeType == ShapeTypes.POLYGON){
+            // Jika pada polygon ditemukan ada perubahan vertex, memasuki state onediting;
+            if (clickedShapeInfo.vertexCount < clickedShapeInfo.getMaxVertex()){
+                currentState =STATE.ONEDITING;
+            }
+        }   
     }
 }
 
