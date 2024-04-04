@@ -65,6 +65,7 @@ function updateDrawingInfo(){
     drawingInfo.render(rightPanel);
 }
 
+
 function resetRightPanel(){
     drawingInfo.setInfo(null, null);
     rightPanel.innerHTML = "";
@@ -127,9 +128,9 @@ function handleCanvasClick(event){
         if (shape["shapeClicked"] != null){
             console.log("shape detected:", shape);
             // Terdapat model yang diklik
-            clickedShapeInfo.shape = shape["shapeClicked"];
-            clickedShapeInfo.vertexIdx = shape["vertexIdx"];
-
+            clickedShapeInfo.setInfo(shape["shapeClicked"], shape["vertexIdx"], "#FF0000");
+            clickedShapeInfo.render(rightPanel);
+    
             // Change current state to EDIT
             currentState = STATE.EDIT;
 

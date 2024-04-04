@@ -24,7 +24,7 @@ class DrawingInfo{
     vertexCount;
 
     constructor(){
-        this.drawingObject = null;
+        this.shapeType = null;
         this.color = null;
         this.maxVertex = null;
         this.vertexCount = null;

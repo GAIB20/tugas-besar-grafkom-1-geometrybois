@@ -37,6 +37,20 @@ class Drawer {
      */
     shapeCandidate;
 
+    /**
+     * @type {Shape}
+     * @description Shape being edited
+     * @default null
+     */
+    shapeEdited;
+
+    /**
+     * @type {number}
+     * @description Vertex index edited (null possible)
+     * @default null  
+    */
+    vertexEditedIdx;
+
     constructor() {
         const [canvas, gl] = GLSLProgram.getCanvasAndGLFromidCanvas("glcanvas");
         const program = GLSLProgram.createProgram(gl);
@@ -59,7 +73,9 @@ class Drawer {
         gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
        this.Shapes = [];
-       this.shapeCandidate = null;       
+       this.shapeCandidate = null;     
+       this.shapeEdited = null;  
+       this.vertexEditedIdx = null;
     }
 
     drawAllShapes() {
@@ -113,6 +129,11 @@ class Drawer {
         }
         
         this.shapeCandidate = shape;
+    }
+
+    startEditShape(shape, vertexIdx){
+        this.shapeEdited = shape;
+        this.vertexEditedIdx = vertexIdx;
     }
 
     drawShapeCandidate(){
