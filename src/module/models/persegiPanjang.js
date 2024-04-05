@@ -79,37 +79,50 @@ class Rectangle extends Shape{
     }
 
     getColorBuffer() {
-        return new Float32Array([
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-            1, 0, 0.5, 1,
-        ]);
+        var buffer = new Float32Array(this.count*4);
+        
+        // Sesuaikan dengan jumlah vertex
+        // for (let i =0; i<(this.count); i++){
+        //     buffer[i*4] = this.vertices[i].color.r;
+        //     buffer[i*4+1] = this.vertices[i].color.g;
+        //     buffer[i*4+2] = this.vertices[i].color.b;
+        //     buffer[i*4+3] = this.vertices[i].color.a;
+        // }
+
+        return buffer;
     }
 
     // Move to shape later
 
     getVertexClicked(x, y) {
-        let index = 0;
-        for (let vertex of this.vertices) {
-            var point = this.getPoints(vertex.x, vertex.y);
-            let topRightX = point[4]
-            let topRightY = point[5];
-            let bottomLeftX = point[3];
-            let bottomLeftY = point[2];
+        // let index = 0;
+        // for (let vertex of this.vertices) {
+        //     var point = this.getPoints(vertex.x, vertex.y);
+        //     let topRightX = point[4]
+        //     let topRightY = point[5];
+        //     let bottomLeftX = point[3];
+        //     let bottomLeftY = point[2];
 
-            let left = Math.min(topRightX, bottomLeftX);
-            let right = Math.max(topRightX, bottomLeftX);
-            let bottom = Math.max(topRightY, bottomLeftY);
-            let top = Math.min(topRightY, bottomLeftY);
+        //     let left = Math.min(topRightX, bottomLeftX);
+        //     let right = Math.max(topRightX, bottomLeftX);
+        //     let bottom = Math.max(topRightY, bottomLeftY);
+        //     let top = Math.min(topRightY, bottomLeftY);
 
-            if (x >= left && x <= right && y <= bottom && y >= top) {
-                return index;
+        //     if (x >= left && x <= right && y <= bottom && y >= top) {
+        //         return index;
+        //     }
+        //     index++;
+        // }
+        let i = 0;
+        while (i < this.vertices.length){
+            // Cek apakah termasuk jangkauan vertices
+            console.log(`cursor dalam x: ${x} y: ${y}    vertex x: ${this.vertices[i].x}, y: ${this.vertices[i].y}`)
+            if (((x >= (this.vertices[i].x - 5)) && (x <= (this.vertices[i].x +5))) && ((y >= (this.vertices[i].y-5)) && (y <= (this.vertices[i].y+5)))){
+                return i
             }
-            index++;
+            i++;
         }
+
         return -1;
     }
 
