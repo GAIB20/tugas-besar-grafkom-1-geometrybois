@@ -193,9 +193,10 @@ class Drawer {
         // Determine the class to assign
         let shape = null;
         if (object.shapeType == ShapeTypes.LINES){
+            shape = Garis.generateShapeFromObject(object);
 
         } else if (object.shapeType == ShapeTypes.SQUARE){
-
+            shape = Square.generateShapeFromObject(object);
         } else if (object.shapeType == ShapeTypes.RECTANGLE){
 
         } else if (object.shapeType == ShapeTypes.POLYGON){

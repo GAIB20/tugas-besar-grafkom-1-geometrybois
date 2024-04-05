@@ -71,7 +71,11 @@ class Garis extends Shape {
         garis.shapeType = object.shapeType;
         garis.shear = object.shear;
 
-        garis.setPoints([new Point(object.vertices[0].x, object.vertices[0].y), new Point(object.vertices[1].x, object.vertices[1].y)]);
+        for (let vertex of object.vertices){
+            let point = new Point(vertex.x, vertex.y);
+            point.setColor(new Color(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a));
+            garis.vertices.push(point);
+        }
         return garis;
     }
 
