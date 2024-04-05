@@ -133,11 +133,11 @@ class Drawer {
                 shape.addStartPoint(mousePosition);
                 break;
             case ShapeTypes.POLYGON:
-                shape = new Polygon(mousePosition);
+                shape = new Polygon();
+                shape.addPoint(mousePosition);
                 break;
             case ShapeTypes.RECTANGLE:
-                shape = new Rectangle();
-                shape.addStartPoint(mousePosition);
+                shape = new Rectangle(mousePosition);
                 break;
             default:
                 console.error(`ShapeType ${shapeType} is not recognized`);
