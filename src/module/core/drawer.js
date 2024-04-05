@@ -169,7 +169,6 @@ class Drawer {
         let idx = this.Shapes.length-1;
         while (idx >= 0 ){
             let vertexIdx = this.Shapes[idx].getVertexClicked(x, y);
-            console.log("model:", this.Shapes[idx], "vertex id:", vertexIdx);
             if (vertexIdx != -1){
                 return {shapeClicked: this.Shapes[idx], vertexIdx: vertexIdx}
             }
@@ -202,11 +201,6 @@ class Drawer {
         } else if (object.shapeType == ShapeTypes.POLYGON){
             shape = Polygon.generateShapeFromObject(object);
         }
-
-        // Change id of object to suit the already drawn image
-        console.log(shape.id);
-        // object.id = getClassOfVariable(object).counter + 1;
-        // getClassOfVariable(object).counter++;
         this.addShape(shape);
         this.drawAllShapes();
     }

@@ -13,6 +13,7 @@ const STATE =  Object.freeze({
     ONEDITING: "OnEditing",
 })
 var currentState = STATE.IDLE;
+var convexHullMode = false; 
 
 var coordX = 0;
 var coordY = 0;
@@ -97,6 +98,9 @@ function handleCanvasClick(event){
         if (drawingInfo.shapeType == ShapeTypes.POLYGON){
             // Jika merupakan shape polygon, tambah vertex 
             drawer.shapeCandidate.updateLastPoint(new Point(coordX, coordY));
+            if(convexHullMode){
+                drawer.shapeCandidate.preserveConvexHull();
+            }
 
             // Draw polygon terupdate
             drawer.drawShapeCandidate();
@@ -104,6 +108,7 @@ function handleCanvasClick(event){
             // Perbarui Right Panel Info
             updateDrawingInfo();
 
+            console.log(drawer.shapeCandidate.drawArraysCount())
             // apabila count == maxVertex, shape terbentuk
             if (drawer.shapeCandidate.drawArraysCount() == drawingInfo.getMaxVertex()){
                 // Masukkan shape yang terbentuk ke dalam list shape
@@ -149,6 +154,9 @@ function handleCanvasClick(event){
             // Jika polygon lakukan penambahan titik apabila memungkinkan 
             if (clickedShapeInfo.vertexCount < clickedShapeInfo.getMaxVertex()){
                 clickedShapeInfo.shape.updateLastPoint(new Point(coordX, coordY));
+                if(convexHullMode){
+                    clickedShapeInfo.shape.preserveConvexHull();
+                }
                 drawer.drawAllShapes();
                 clickedShapeInfo.vertexCount++;
                 clickedShapeInfo.render(rightPanel);
@@ -166,12 +174,13 @@ function handleCanvasClick(event){
         let shape = drawer.getShapeAndVertexClicked(coordX, coordY);
         if (shape["vertexIdx"] != -1){
             // Jika model yang diclick adalah model yang berbeda
+            console.log("Edit click on canvas", shape);
             if (shape["shapeClicked"].id != clickedShapeInfo.shape.id){
                 // Change model
                 clickedShapeInfo.setInfo(shape["shapeClicked"], shape["vertexIdx"], "#FF0000")
             } else {
                 // Lock vertex
-                clickedShapeInfo.vertexIdx = vertexLocked;
+                clickedShapeInfo.vertexIdx = shape["vertexIdx"];
             }
             clickedShapeInfo.render(rightPanel);
             drawer.drawAllShapes();
@@ -179,7 +188,6 @@ function handleCanvasClick(event){
         } else {
             // Kembali idle jika klik blank canvas
             currentState = STATE.IDLE;
-            console.log("masuk")
             resetRightPanelEditing();
         }
     }
@@ -233,7 +241,6 @@ function handleCanvasMouseMove(event){
                     // Update titik saat hovering
                     let updatedPoint = new Point(coordX, coordY);
                     updatedPoint.setColor(clickedShapeInfo.shape.vertices[clickedShapeInfo.vertexIdx].color);
-                    console.log(updatedPoint);
                     clickedShapeInfo.shape.setPoint(clickedShapeInfo.vertexIdx, updatedPoint);
                 }
             }
@@ -287,6 +294,10 @@ function handleCanvasMouseUp(event){
              if (clickedShapeInfo.vertexCount == clickedShapeInfo.getMaxVertex()){
                 // Jika tidak menambah vertex, lakukan drop
                 currentState = STATE.EDIT;
+                if(convexHullMode){
+                    clickedShapeInfo.shape.preserveConvexHull();
+                }
+                drawer.drawAllShapes();
             }
         }
     }
@@ -296,8 +307,6 @@ canvas.addEventListener("click", (event) => {handleCanvasClick(event)});
 canvas.addEventListener("mousemove", (event) => {handleCanvasMouseMove(event)})
 canvas.addEventListener("mousedown", (event)=> {handleCanvasMouseDown(event)})
 canvas.addEventListener("mouseup", (event)=> {handleCanvasMouseUp(event)})
-
-// Model (TODO: cari cara agar model yang sudah di render bisa listen)
 
 /* User Interface */
 // Get current coordinate of cursor
@@ -359,26 +368,6 @@ function loadModelHandle(){
 
         reader.readAsText(file);
 
-        // Send the file using fetch or XMLHttpRequest
-        // Example using fetch:
-        // fetch('upload.php', {
-        //     method: 'POST',
-        //     body: formData
-        // })
-        // .then(response => {
-        //     if (response.ok) {
-        //         return response.text();
-        //     }
-        //     throw new Error('Error uploading file');
-        // })
-        // .then(data => {
-        //     console.log('File uploaded successfully:', data);
-        //     // Handle the response or update UI accordingly
-        // })
-        // .catch(error => {
-        //     console.error('File upload error:', error);
-        //     // Handle errors or display error message
-        // });
     } else {
         console.error('No file selected');
         // Display a message or handle the case when no file is selected
@@ -387,3 +376,17 @@ function loadModelHandle(){
 }
 
 loadButton.addEventListener("click", loadModelHandle)
+
+// Convex Hull Mode
+const convextHullButton = document.getElementById("convex-btn");
+
+function handleConvexModeToggle(e){
+    if (convexHullMode){
+        convextHullButton.innerText = "Not Preserve Convex Hull";
+    } else {
+        convextHullButton.innerText = "Preserve Convex Hull";
+    }
+    convexHullMode = !convexHullMode;
+}
+
+convextHullButton.addEventListener("click", (e)=> {handleConvexModeToggle(e)})

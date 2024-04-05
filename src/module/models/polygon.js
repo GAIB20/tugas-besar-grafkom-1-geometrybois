@@ -3,6 +3,7 @@ import Shape from "./shape.js";
 import ShapeTypes from "../type/shapeTypes.js";
 import Point from "../utils/point.js";
 import Color from "../utils/color.js";
+import convexHull from "../utils/convexhull.js";
 
 class Polygon extends Shape{
     /**
@@ -99,6 +100,30 @@ class Polygon extends Shape{
             i++;
         }
         return -1;
+    }
+
+    preserveConvexHull(){
+        if (this.vertices.length >=3){
+            // Get the convex hull
+            const hull = convexHull(this.vertices);
+            console.log("vertices", this.vertices);
+            console.log("hull: ", hull);
+            // Set convex hull to be rendered first before other verteices
+            let newVertices = hull;
+    
+            // Add other vertices if not all vertices in hull
+            if (newVertices.length != this.vertices.length){
+                for (let vertex of this.vertices){
+                    if(hull.some(v => JSON.stringify(v) === JSON.stringify(vertex))){
+                        // If vertex not found in hull, add to newVertices
+                        newVertices.push(vertex);
+                    }
+                }
+            }
+    
+            // Set vertices to newVertices
+            this.vertices = newVertices;
+        }
     }
 
 }
