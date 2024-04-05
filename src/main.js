@@ -168,12 +168,13 @@ function handleCanvasClick(event){
         let shape = drawer.getShapeAndVertexClicked(coordX, coordY);
         if (shape["vertexIdx"] != -1){
             // Jika model yang diclick adalah model yang berbeda
+            console.log("Edit click on canvas", shape);
             if (shape["shapeClicked"].id != clickedShapeInfo.shape.id){
                 // Change model
                 clickedShapeInfo.setInfo(shape["shapeClicked"], shape["vertexIdx"], "#FF0000")
             } else {
                 // Lock vertex
-                clickedShapeInfo.vertexIdx = vertexLocked;
+                clickedShapeInfo.vertexIdx = shape["vertexIdx"];
             }
             clickedShapeInfo.render(rightPanel);
             drawer.drawAllShapes();
@@ -181,7 +182,6 @@ function handleCanvasClick(event){
         } else {
             // Kembali idle jika klik blank canvas
             currentState = STATE.IDLE;
-            console.log("masuk")
             resetRightPanelEditing();
         }
     }
