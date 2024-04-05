@@ -129,45 +129,45 @@ class Shape extends Node2 {
      * @returns {Float32Array} Color buffer
     */
     getColorBuffer() { console.error(`getColorBuffer in class Shape is not implemented in class ${this.constructor.name}`); }
-    
+
     /**
      * @abstract
      * @param {number} x cursor x coordinate
      * @param {number} y cursor y coordinate
      * @returns {number} index of clicked vertex, -1 if not clicked
     */
-    getVertexClicked(x,y) { console.error(`getVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
-    
+    getVertexClicked(x, y) { console.error(`getVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
+
     /**
      * @abstract
      * @param {Object} object json object input  
      * @returns {Shape} shape object generated
      */
-    static generateShapeFromObject(object){console.error(`generapeShapeFromObject in class Shape is not implemented in class ${this.constructor.name}`);}
+    static generateShapeFromObject(object) { console.error(`generapeShapeFromObject in class Shape is not implemented in class ${this.constructor.name}`); }
 
 
     /* ====== SETTER ====== */
-    setPoint(idx, point){
+    setPoint(idx, point) {
         this.vertices[idx] = point;
     }
 
-    setPoints(points){
+    setPoints(points) {
         this.vertices = points;
     }
 
     // Set all vertices to the same color
-    setColor(color){
-        for (let vertex of this.vertices){
+    setColor(color) {
+        for (let vertex of this.vertices) {
             vertex.setColor(color);
         }
-    }   
+    }
 
     // Set specific vertex's color to color
-    setVertexColor(idx, color){
+    setVertexColor(idx, color) {
         this.vertices[idx].setColor(color);
     }
 
-    
+
     /* ======================================== */
 
     getTransformationMatrix(width, height) {
@@ -189,6 +189,18 @@ class Shape extends Node2 {
             x + 5, y - 5,
             x - 5, y - 5,
         ]
+    }
+
+    getVertexClicked(x, y) {
+        for (let i = 0; i < this.vertices.length; i++) {
+            if (
+                (x >= (this.vertices[i].x + this.originTranslation.x - 5) && x <= (this.vertices[i].x + this.originTranslation.x + 5)) &&
+                (y >= (this.vertices[i].y + this.originTranslation.y - 5) && y <= (this.vertices[i].y + this.originTranslation.y + 5))
+            ) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**

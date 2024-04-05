@@ -52,14 +52,7 @@ class Square extends Shape{
          ]);
     }
 
-    getVertexClicked(x, y) {
-        for (let i = 0; i < this.vertices.length; i++) {
-            if (((x >= (this.vertices[i].x - 5)) && (x <= (this.vertices[i].x +5))) && ((y >= (this.vertices[i].y-5)) && (y <= (this.vertices[i].y+5)))) {
-                return i;
-            }
-        }
-        return -1;
-    }
+    
 
     addStartPoint(point) {
         this.vertices[0] = point;

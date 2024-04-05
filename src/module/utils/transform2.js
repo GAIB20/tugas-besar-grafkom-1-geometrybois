@@ -166,7 +166,7 @@ class Transform2 {
         matrix = Transform2.rotate(matrix, angleInRadians);
         matrix = Transform2.scale(matrix, sx, sy);
         matrix = Transform2.shearing(matrix, sh);
-        console.log(matrix);
+
         return matrix;
     }
 }

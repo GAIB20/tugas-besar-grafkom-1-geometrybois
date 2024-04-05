@@ -94,6 +94,7 @@ class Drawer {
         shape.vertices.forEach((vertex) => {
             const point = shape.getPoints(vertex.x, vertex.y);
             const square = this.pointToSquare(point);
+            square.originTranslation = shape.originTranslation;
             this.glDrawing.drawShape(square);
         })
     }
@@ -136,7 +137,8 @@ class Drawer {
                 shape.addPoint(mousePosition);
                 break;
             case ShapeTypes.RECTANGLE:
-                shape = new Rectangle(mousePosition);
+                shape = new Rectangle();
+                shape.addStartPoint(mousePosition);
                 break;
             default:
                 console.error(`ShapeType ${shapeType} is not recognized`);
@@ -191,6 +193,7 @@ class Drawer {
 
     loadModelFromJSON(object){
         // Determine the class to assign
+        console.log("object: ", object);
         let shape = null;
         if (object.shapeType == ShapeTypes.LINES){
 
