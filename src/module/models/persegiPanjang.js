@@ -79,15 +79,35 @@ class Rectangle extends Shape{
     }
 
     getColorBuffer() {
-        var buffer = new Float32Array(this.count*4);
+        var buffer = new Float32Array(6*4);
         
         // Sesuaikan dengan jumlah vertex
-        // for (let i =0; i<(this.count); i++){
-        //     buffer[i*4] = this.vertices[i].color.r;
-        //     buffer[i*4+1] = this.vertices[i].color.g;
-        //     buffer[i*4+2] = this.vertices[i].color.b;
-        //     buffer[i*4+3] = this.vertices[i].color.a;
-        // }
+        for (let i =0; i<3; i++){
+            buffer[i*4] = this.vertices[i].color.r;
+            buffer[i*4+1] = this.vertices[i].color.g;
+            buffer[i*4+2] = this.vertices[i].color.b;
+            buffer[i*4+3] = this.vertices[i].color.a;
+
+            if (i == 1){// buffer index 4
+                buffer[(i+3)*4] = this.vertices[i].color.r;
+                buffer[(i+3)*4+1] = this.vertices[i].color.g;
+                buffer[(i+3)*4+2] = this.vertices[i].color.b;
+                buffer[(i+3)*4+3] = this.vertices[i].color.a;
+            } else if (i == 2){ // buffer index 3
+                buffer[(i+1)*4] = this.vertices[i].color.r;
+                buffer[(i+1)*4+1] = this.vertices[i].color.g;
+                buffer[(i+1)*4+2] = this.vertices[i].color.b;
+                buffer[(i+1)*4+3] = this.vertices[i].color.a;
+            }
+        }
+
+        // buffer index 5
+        buffer[5*4] = this.vertices[3].color.r;
+        buffer[5*4+1] = this.vertices[3].color.g;
+        buffer[5*4+2] = this.vertices[3].color.b;
+        buffer[5*4+3] = this.vertices[3].color.a;
+
+        console.log(buffer);
 
         return buffer;
     }

@@ -158,7 +158,6 @@ class Shape extends Node2 {
     // Set all vertices to the same color
     setColor(color){
         for (let vertex of this.vertices){
-            console.log(vertex);
             vertex.setColor(color);
         }
     }   
