@@ -79,10 +79,18 @@ class Square extends Shape{
         let dx = Math.abs(point.x - this.center.x);
         let dy = Math.abs(point.y - this.center.y);
         let d = Math.min(dx, dy);
+        let color0 = this.vertices[0].color;
+        let color1 = this.vertices[1].color;
+        let color2 = this.vertices[2].color;
+        let color3 = this.vertices[3].color;
         this.vertices[0] = new Point(this.center.x - d, this.center.y - d);
         this.vertices[1] = new Point(this.center.x + d, this.center.y - d);
         this.vertices[2] = new Point(this.center.x + d, this.center.y + d);
         this.vertices[3] = new Point(this.center.x - d, this.center.y + d);
+        this.vertices[0].setColor(color0);
+        this.vertices[1].setColor(color1);
+        this.vertices[2].setColor(color2);
+        this.vertices[3].setColor(color3);
     }
 
     
