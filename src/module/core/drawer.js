@@ -133,8 +133,7 @@ class Drawer {
                 shape.addStartPoint(mousePosition);
                 break;
             case ShapeTypes.POLYGON:
-                shape = new Polygon();
-                shape.addPoint(mousePosition);
+                shape = new Polygon(mousePosition);
                 break;
             case ShapeTypes.RECTANGLE:
                 shape = new Rectangle();
