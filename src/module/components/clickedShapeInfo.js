@@ -90,7 +90,6 @@ class ClickedShapeInfo{
     #handleTranslationXInput(translationX){
         // Update Origin Translation X-axis
         this.shape.originTranslation.x = translationX;
-        this.shape.translateXVertices(translationX);
         console.log(this.drawer);
         this.drawer.drawAllShapes();
     }
@@ -98,7 +97,6 @@ class ClickedShapeInfo{
     #handleTranslationYInput(translationY){
         // Update Origin Translation y-axis
         this.shape.originTranslation.y = translationY;
-        this.shape.translateYVertices(translationY);
         this.drawer.drawAllShapes();
     }
     
