@@ -139,6 +139,10 @@ class Shape extends Node2 {
     getVertexClicked(x,y) { console.error(`getVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
     
     /* ====== SETTER ====== */
+    setPoint(idx, point){
+        this.vertices[idx] = point;
+    }
+
     setPoints(points){
         this.vertices = points;
     }

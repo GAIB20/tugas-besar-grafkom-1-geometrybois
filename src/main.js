@@ -13,6 +13,7 @@ const STATE =  Object.freeze({
     ONEDITING: "OnEditing",
 })
 var currentState = STATE.IDLE;
+var isDragging = false;
 
 console.log("initial state", currentState)
 
@@ -197,6 +198,10 @@ function handleCanvasMouseMove(event){
                     clickedShapeInfo.shape.setCount(clickedShapeInfo.shape.drawArraysCount()-1);
                     drawer.drawAllShapes();
                     currentState = STATE.EDIT;
+                } else {
+                    // Kasus polygon dalam kondisi siap untuk memindahkan titik
+                    // Update titik saat hovering
+                    clickedShapeInfo.shape.setPoint(clickedShapeInfo.vertexIdx, new Point(coordX, coordY));
                 }
             }
             drawer.drawAllShapes();
@@ -212,10 +217,23 @@ function handleCanvasMouseMove(event){
 }
 
 function handleCanvasMouseDown(event){
+    updateCursorCoordinates(event);
     if (currentState == STATE.EDIT){
-        // Ubah jadi onEditing
-        if (clickedShapeInfo.shape.shapeType != ShapeTypes.POLYGON){
-
+        if ((clickedShapeInfo.shape.shapeType == ShapeTypes.POLYGON)){
+            console.log("mouse down");
+            // Jika polygon akan dicek lagi apakah sedang menambah vertex atau tidak
+            if (clickedShapeInfo.vertexCount == clickedShapeInfo.getMaxVertex()){
+                // Jika tidak menambah vertex, mulai lakukan drag apabila ada vertex yang diklik
+                let vertexLocked = clickedShapeInfo.shape.getVertexClicked(coordX, coordY);
+                if (vertexLocked != -1){
+                    // Lock vertex
+                    clickedShapeInfo.vertexIdx = vertexLocked;
+                    // Memasuki state onediting
+                    currentState = STATE.ONEDITING;
+                }
+            }
+        } else {
+            // Ubah jadi onEditing
             currentState = STATE.ONEDITING;
         }
     }
@@ -226,6 +244,12 @@ function handleCanvasMouseUp(event){
         if (clickedShapeInfo.shape.shapeType != ShapeTypes.POLYGON){
             // Ubah jadi onEditing
             currentState = STATE.EDIT;
+        } else {
+             // Jika polygon akan dicek lagi apakah sedang menambah vertex atau tidak
+             if (clickedShapeInfo.vertexCount == clickedShapeInfo.getMaxVertex()){
+                // Jika tidak menambah vertex, lakukan drop
+                currentState = STATE.EDIT;
+            }
         }
     }
 }
