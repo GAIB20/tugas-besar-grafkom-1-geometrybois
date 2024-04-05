@@ -120,7 +120,7 @@ function handleCanvasClick(event){
             currentState = STATE.IDLE;
             resetRightPanel();
         }
-    }  else if (currentState = STATE.IDLE){
+    }  else if (currentState == STATE.IDLE){
         // Jika Idle dilakukan pengecekan apakah ada vertex model yang diclick
         let shape = drawer.getShapeAndVertexClicked(coordX, coordY);
         console.log(`cursor x: ${coordX}, y: ${coordY}`);
@@ -136,7 +136,7 @@ function handleCanvasClick(event){
             drawer.drawAllShapes();
             drawer.drawPoints(clickedShapeInfo.shape);
         }
-    } else if (currentState = STATE.EDIT){
+    } else if (currentState == STATE.ONEDITING){
         if (clickedShapeInfo.shape.shapeType == ShapeTypes.POLYGON){
             // Jika polygon lakukan penambahan titik apabila memungkinkan 
             if (clickedShapeInfo.vertexCount < clickedShapeInfo.getMaxVertex()){
@@ -144,11 +144,17 @@ function handleCanvasClick(event){
                 drawer.drawAllShapes();
                 clickedShapeInfo.vertexCount++;
                 clickedShapeInfo.render(rightPanel);
+                // Jika setelah ditambah jumlah vertex == max vertex, kembali ke state edit agar hovering tidak memunculkan titik baru
+                if (clickedShapeInfo.vertexCount == clickedShapeInfo.getMaxVertex()){
+                    currentState = STATE.EDIT;
+                }
             } else {
                 // Kembali ke state edit
                 currentState = STATE.EDIT;
             }
         }
+    } else {
+
     }
 }
 
@@ -175,13 +181,25 @@ function handleCanvasMouseMove(event){
             modifyVertex(event, clickedShapeInfo.shape, clickedShapeInfo.vertexIdx);
         } else if (clickedShapeInfo.shape.shapeType == ShapeTypes.POLYGON){
             // Update titik terakhir pada polygon jika telah ada titik sementara
-            if (clickedShapeInfo.vertexCount < clickedShapeInfo.shape.vertices.length){
-                clickedShapeInfo.shape.updateLastPoint(new Point(coordX, coordY));
-            } else if (clickedShapeInfo.vertexCount == clickedShapeInfo.shape.vertices.length){
-                clickedShapeInfo.shape.addPoint(new Point(coordX, coordY));
-                clickedShapeInfo.shape.setCount(clickedShapeInfo.shape.drawArraysCount()+1);
+            if (clickedShapeInfo.vertexCount < clickedShapeInfo.maxVertex ){
+                if (clickedShapeInfo.vertexCount < clickedShapeInfo.shape.vertices.length){
+                    clickedShapeInfo.shape.updateLastPoint(new Point(coordX, coordY));
+                } else if ((clickedShapeInfo.vertexCount == clickedShapeInfo.shape.vertices.length)){
+                    
+                    clickedShapeInfo.shape.addPoint(new Point(coordX, coordY));
+                    clickedShapeInfo.shape.setCount(clickedShapeInfo.shape.drawArraysCount()+1);
+                    
+                }
+            } else {
+                // Jika vertex pada vertices lebih banyak daripada max vertex, hapus titik semu
+                if (clickedShapeInfo.shape.vertices.length > clickedShapeInfo.maxVertex){
+                    clickedShapeInfo.shape.removePoint(clickedShapeInfo.shape.vertices.length-1);
+                    clickedShapeInfo.shape.setCount(clickedShapeInfo.shape.drawArraysCount()-1);
+                    drawer.drawAllShapes();
+                    currentState = STATE.EDIT;
+                }
             }
-            drawer.drawShapeCandidate();
+            drawer.drawAllShapes();
         }
     } else if (currentState == STATE.EDIT){
         if (clickedShapeInfo.shape.shapeType == ShapeTypes.POLYGON){
@@ -196,14 +214,19 @@ function handleCanvasMouseMove(event){
 function handleCanvasMouseDown(event){
     if (currentState == STATE.EDIT){
         // Ubah jadi onEditing
-        currentState = STATE.ONEDITING;
+        if (clickedShapeInfo.shape.shapeType != ShapeTypes.POLYGON){
+
+            currentState = STATE.ONEDITING;
+        }
     }
 }
 
 function handleCanvasMouseUp(event){
     if (currentState == STATE.ONEDITING){
-        // Ubah jadi onEditing
-        currentState = STATE.EDIT;
+        if (clickedShapeInfo.shape.shapeType != ShapeTypes.POLYGON){
+            // Ubah jadi onEditing
+            currentState = STATE.EDIT;
+        }
     }
 }
 

@@ -92,6 +92,10 @@ class Drawer {
         })
     }
 
+    drawPoint(point){
+        this.glDrawing.drawShape(this.pointToSquare(point));
+    }
+
     drawOneShape(shape) {
         this.glDrawing.drawShape(shape);
         this.drawPoints(shape);

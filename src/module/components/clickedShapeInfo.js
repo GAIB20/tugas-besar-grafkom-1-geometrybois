@@ -128,10 +128,24 @@ class ClickedShapeInfo{
     }
 
     #handleDeletePoint(vertexIdx){
-        if (vertexIdx == this.vertexIdx){
-            this.vertexIdx = 0;
-        } 
+        // Remove point from polygon
+        if (this.shape.count > 3){
         
+            this.shape.removePoint(vertexIdx);
+            this.shape.count--;
+            this.maxVertex--;
+            this.vertexCount--;
+            document.getElementById("max-vertex").value = this.maxVertex;
+            document.getElementById("vertex-count").innerText = this.vertexCount;
+            
+            // Set index to 0
+            this.vertexIdx = 0; 
+            document.getElementById("index-point-input").value = 0;
+            this.drawer.drawAllShapes();
+            this.drawer.drawPoint(this.shape.vertices[this.vertexIdx]);
+        } else {
+            alert("Polygon has minimum 3 edge");
+        }
     }
 
 
@@ -157,7 +171,7 @@ class ClickedShapeInfo{
                     </div>
                     <div>
                         <span>Vertex Count: </span>
-                        <span id="Vertex Count"> ${this.vertexCount} </span>
+                        <span id="vertex-count"> ${this.vertexCount} </span>
                     </div>
                     `
                     :
@@ -247,7 +261,7 @@ class ClickedShapeInfo{
         document.getElementById("color-picker").addEventListener("input" , (e) => {this.#handleModelColorPicker(document.getElementById("color-picker").value)})
         if (this.shape.shapeType == ShapeTypes.POLYGON) {
             document.getElementById("max-vertex").addEventListener("input" , (e) => {this.#handleMaxVertexInput(document.getElementById("max-vertex").value)})
-            document.getElementById("delete-point-button").addEventListener("input" , (e) => {this.#handleDeletePoint(document.getElementById("index-point-input").value)})
+            document.getElementById("delete-point-button").addEventListener("click" , (e) => {this.#handleDeletePoint(document.getElementById("index-point-input").value)})
         }
         document.getElementById("translationXInput").addEventListener("input" , (e) => {this.#handleTranslationXInput(document.getElementById("translationXInput").value)})
         document.getElementById("translationYInput").addEventListener("input" , (e) => {this.#handleTranslationYInput(document.getElementById("translationYInput").value)})
