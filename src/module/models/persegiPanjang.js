@@ -50,7 +50,7 @@ class Rectangle extends Shape{
     drawArraysCount() {
         return 6;
     }
-
+    
     setPoints(p1, p2, p3, p4) {
         this.p1 = p1;
         this.p2 = p2;
@@ -137,7 +137,7 @@ class Rectangle extends Shape{
         while (i < this.vertices.length){
             // Cek apakah termasuk jangkauan vertices
             console.log(`cursor dalam x: ${x} y: ${y}    vertex x: ${this.vertices[i].x}, y: ${this.vertices[i].y}`)
-            if (((x >= (this.vertices[i].x - 5)) && (x <= (this.vertices[i].x +5))) && ((y >= (this.vertices[i].y-5)) && (y <= (this.vertices[i].y+5)))){
+            if (((x >= (this.vertices[i].x - 35)) && (x <= (this.vertices[i].x +35))) && ((y >= (this.vertices[i].y-35)) && (y <= (this.vertices[i].y+35)))){
                 return i
             }
             i++;
@@ -147,16 +147,16 @@ class Rectangle extends Shape{
     }
 
     resize(idx, x, y) {
-        let two = (idx + 2) % 4;
+        let two = (idx + 3) % 4;
         let one = 0;
         let three = 0;
 
         if (idx % 2 == 0) {
-            one = (idx + 3) % 4;
+            one = (idx + 2) % 4;
             three = (idx + 1) % 4;
         } else {
             one = (idx + 1) % 4;
-            three = (idx + 3) % 4;
+            three = (idx + 2) % 4;
         }
         let theta = (this.angle * Math.PI) / 180;
         let sin = Math.sin(theta);

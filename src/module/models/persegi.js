@@ -2,6 +2,7 @@
 import Shape from "./shape.js";
 import ShapeTypes from "../type/shapeTypes.js";
 import Point from "../utils/point.js";
+import Color from "../utils/color.js";
 
 class Square extends Shape{
     /**
@@ -90,6 +91,7 @@ class Square extends Shape{
         let square = new Square();
         square.angle = object.angle;
         square.formed = object.formed;
+        square.center = object.center;
         square.originTranslation = object.originTranslation;
         square.position = object.position;
         square.rotation = object.rotation;
@@ -98,7 +100,12 @@ class Square extends Shape{
         square.shapeType = object.shapeType;
         square.shear = object.shear;
 
-        square.setPoints(new Point(object.vertices[0].x, object.vertices[0].y), new Point(object.vertices[1].x, object.vertices[1].y), new Point(object.vertices[2].x, object.vertices[2].y), new Point(object.vertices[3].x, object.vertices[3].y));
+        for (let vertex of object.vertices){
+            let point = new Point(vertex.x, vertex.y);
+            point.setColor(new Color(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a));
+            square.vertices.push(point);
+        }
+        
         return square;
     }
 
