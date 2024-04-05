@@ -13,9 +13,6 @@ const STATE =  Object.freeze({
     ONEDITING: "OnEditing",
 })
 var currentState = STATE.IDLE;
-var isDragging = false;
-
-console.log("initial state", currentState)
 
 var coordX = 0;
 var coordY = 0;
@@ -25,11 +22,11 @@ const drawer = new Drawer();
 
 
 /* Left Panel */
-var leftPanelWidth = (document.querySelector('.left-panel')).offsetWidth;
-var drawGarisPanel = document.getElementById('draw-garis');
-var drawPersegiPanel = document.getElementById('draw-persegi');
-var drawRectanglePanel = document.getElementById('draw-rectangle');
-var drawPolygonPanel =document.getElementById('draw-polygon');
+const leftPanelWidth = (document.querySelector('.left-panel')).offsetWidth;
+const drawGarisPanel = document.getElementById('draw-garis');
+const drawPersegiPanel = document.getElementById('draw-persegi');
+const drawRectanglePanel = document.getElementById('draw-rectangle');
+const drawPolygonPanel =document.getElementById('draw-polygon');
 
 
 function handleLeftPanelClick(event, shapeType){
@@ -285,22 +282,76 @@ function modifyVertex(event, selectedObject, index) {
 }
 
 // Save Model
-let saveButton = document.getElementById("save-btn");
+const saveButton = document.getElementById("save-btn");
 
 function saveModel(object) {
-    const filename = "object-file"
-
-    const text = JSON.stringify(object);
-
-    const file = new Blob([text], {
-        type: "json/javascript",
-    });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(file);
-    link.download = `${filename}.json`;
-    link.click();
-    URL.revokeObjectURL(link.href);
+    if (object != null){
+        const filename = "object-file"
+    
+        const text = JSON.stringify(object);
+    
+        const file = new Blob([text], {
+            type: "json/javascript",
+        });
+    
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(file);
+        link.download = `${filename}.json`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    } else {
+        alert("Please select the model to download");
+    }
 }
 
-saveButton.addEventListener("click", (e) => {saveModel(clickedShapeInfo)});
+saveButton.addEventListener("click", (e) => {saveModel(clickedShapeInfo.shape)});
+
+// Load Model
+const loadButton = document.getElementById("load-btn");
+const fileInput = document.getElementById('fileInput');
+
+function loadModelHandle(){
+    // Akses file .json
+    const file = fileInput.files[0]; // Get the selected file
+    if (file) {
+        const reader = new FileReader()
+
+        reader.onload = function(event){
+
+            const content = event.target.result; // The content of the file
+            const parsedContent = JSON.parse(content); // Parse the JSON content
+            console.log(parsedContent);
+
+            drawer.loadModelFromJSON(parsedContent);
+        }
+
+        reader.readAsText(file);
+
+        // Send the file using fetch or XMLHttpRequest
+        // Example using fetch:
+        // fetch('upload.php', {
+        //     method: 'POST',
+        //     body: formData
+        // })
+        // .then(response => {
+        //     if (response.ok) {
+        //         return response.text();
+        //     }
+        //     throw new Error('Error uploading file');
+        // })
+        // .then(data => {
+        //     console.log('File uploaded successfully:', data);
+        //     // Handle the response or update UI accordingly
+        // })
+        // .catch(error => {
+        //     console.error('File upload error:', error);
+        //     // Handle errors or display error message
+        // });
+    } else {
+        console.error('No file selected');
+        // Display a message or handle the case when no file is selected
+    }
+    // Jika telah terakses load model menggunakan drawer
+}
+
+loadButton.addEventListener("click", loadModelHandle)

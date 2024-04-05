@@ -138,6 +138,14 @@ class Shape extends Node2 {
     */
     getVertexClicked(x,y) { console.error(`getVertexClicked in class Shape is not implemented in class ${this.constructor.name}`); }
     
+    /**
+     * @abstract
+     * @param {Object} object json object input  
+     * @returns {Shape} shape object generated
+     */
+    static generateShapeFromObject(object){console.error(`generapeShapeFromObject in class Shape is not implemented in class ${this.constructor.name}`);}
+
+
     /* ====== SETTER ====== */
     setPoint(idx, point){
         this.vertices[idx] = point;

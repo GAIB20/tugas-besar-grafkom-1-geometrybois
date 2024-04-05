@@ -13,6 +13,11 @@ import Square from "../models/persegi.js"
 import Rectangle from "../models/persegiPanjang.js"
 import Point from "../utils/point.js"
 
+
+function getClassOfVariable(variable) {
+    return Object.prototype.toString.call(variable).slice(8, -1);
+}
+
 /**
  * @class Drawer2
  * @description Drawer class for list of shapes
@@ -54,7 +59,7 @@ class Drawer {
     constructor() {
         const [canvas, gl] = GLSLProgram.getCanvasAndGLFromidCanvas("glcanvas");
         const program = GLSLProgram.createProgram(gl);
-        const undetectedOffset = 15;
+        const undetectedOffset = 78;
         this.glDrawing = new GLDrawing(gl, program);
 
         var leftPanelWidth = (document.querySelector('.left-panel')).offsetWidth;
@@ -177,6 +182,28 @@ class Drawer {
         square.setPoints(p1, p2, p3, p4);
         return square;
     }
+
+    loadModelFromJSON(object){
+        // Determine the class to assign
+        let shape = null;
+        if (object.shapeType == ShapeTypes.LINES){
+
+        } else if (object.shapeType == ShapeTypes.SQUARE){
+
+        } else if (object.shapeType == ShapeTypes.RECTANGLE){
+
+        } else if (object.shapeType == ShapeTypes.POLYGON){
+            shape = Polygon.generateShapeFromObject(object);
+        }
+
+        // Change id of object to suit the already drawn image
+        console.log(shape.id);
+        // object.id = getClassOfVariable(object).counter + 1;
+        // getClassOfVariable(object).counter++;
+        this.addShape(shape);
+        this.drawAllShapes();
+    }
+    
         
 }
 

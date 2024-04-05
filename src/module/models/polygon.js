@@ -1,6 +1,8 @@
 "use strict";
 import Shape from "./shape.js";
 import ShapeTypes from "../type/shapeTypes.js";
+import Point from "../utils/point.js";
+import Color from "../utils/color.js";
 
 class Polygon extends Shape{
     /**
@@ -9,11 +11,35 @@ class Polygon extends Shape{
     count = 1;
 
     static counter = 0;
+    static generateShapeFromObject(object){
+        var polygon = new Polygon();
+        polygon.angle = object.angle;
+        polygon.count = object.count;
+        polygon.formed = object.formed;
+        polygon.originTranslation = object.originTranslation;
+        polygon.position  =object.position;
+        polygon.rotation = object.rotation;
+        polygon.rotationDegree = object.rotationDegree;
+        polygon.scale = object.scale;
+        polygon.shapeType = object.shapeType;
+        polygon.shear = object.shear;
+
+        // Copy vertices
+        for (let vertex of object.vertices){
+            let point = new Point(vertex.x, vertex.y);
+            point.setColor(new Color(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a));
+            polygon.vertices.push(point);
+        }
+
+        return polygon;
+    }
+
     constructor() {
         let idName = "polygon#" + Polygon.counter;
         super(idName, idName, ShapeTypes.POLYGON);
         Polygon.counter++
     }
+
 
     addPoint(point){
         this.vertices.push(point)
