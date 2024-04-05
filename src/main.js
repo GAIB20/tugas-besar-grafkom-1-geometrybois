@@ -118,9 +118,12 @@ function handleCanvasClick(event){
             if (drawingInfo.shapeType == ShapeTypes.RECTANGLE){
                 // Update points sehingga sesuai posisi terakhir
                 drawer.shapeCandidate.updatePoints(new Point(coordX, coordY));
-                drawer.drawShapeCandidate();
+            } else if (drawingInfo.shapeType == ShapeTypes.LINES){
+                // Update points sehingga sesuai posisi terakhir
+                drawer.shapeCandidate.updateLastPoint(new Point(coordX, coordY));
             }
-
+            
+            drawer.drawShapeCandidate();
             // Masukkan shape yang terbentuk ke dalam list shape
             drawer.moveCandidatetoShape();
             currentState = STATE.IDLE;
@@ -201,6 +204,10 @@ function handleCanvasMouseMove(event){
                 drawer.shapeCandidate.setCount(drawer.shapeCandidate.drawArraysCount()+1);
             }
             drawer.drawShapeCandidate();
+        } else if (drawingInfo.shapeType == ShapeTypes.LINES){
+            // Update posisi titik pada garis
+            drawer.shapeCandidate.updateLastPoint(new Point(coordX, coordY));
+            drawer.drawShapeCandidate();
         }
     } else if (currentState == STATE.ONEDITING){
         if (clickedShapeInfo.shape.shapeType == ShapeTypes.RECTANGLE){
@@ -231,6 +238,11 @@ function handleCanvasMouseMove(event){
                     clickedShapeInfo.shape.setPoint(clickedShapeInfo.vertexIdx, updatedPoint);
                 }
             }
+            drawer.drawAllShapes();
+        } else if (clickedShapeInfo.shape.shapeType == ShapeTypes.LINES){
+            let updatedPoint = new Point(coordX, coordY);
+            updatedPoint.setColor(clickedShapeInfo.shape.vertices[clickedShapeInfo.vertexIdx].color);
+            clickedShapeInfo.shape.setPoint(clickedShapeInfo.vertexIdx, updatedPoint);
             drawer.drawAllShapes();
         }
     } else if (currentState == STATE.EDIT){

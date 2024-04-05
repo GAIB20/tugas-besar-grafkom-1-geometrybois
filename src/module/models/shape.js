@@ -171,6 +171,8 @@ class Shape extends Node2 {
     /* ======================================== */
 
     getTransformationMatrix(width, height) {
+        this.rotation = Transform2.degreeToRadian(this.rotationDegree);
+
         return Transform2.general(
             width, height,
             this.originTranslation.x, this.originTranslation.y,
