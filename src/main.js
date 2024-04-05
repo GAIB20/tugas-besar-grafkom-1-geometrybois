@@ -63,11 +63,17 @@ function updateDrawingInfo(){
 }
 
 
-function resetRightPanel(){
+function resetRightPanelDrawing(){
     drawingInfo.setInfo(null, null);
     rightPanel.innerHTML = "";
 }
 
+function resetRightPanelEditing(){
+    clickedShapeInfo.shape = null;
+    clickedShapeInfo.vertexIdx =null;
+    clickedShapeInfo.color = null;
+    rightPanel.innerHTML = "";
+}
 
 /* Canvas */
 var canvas = document.getElementById('glcanvas');
@@ -102,7 +108,7 @@ function handleCanvasClick(event){
                 // Masukkan shape yang terbentuk ke dalam list shape
                 drawer.moveCandidatetoShape();
                 currentState = STATE.IDLE;
-                resetRightPanel();
+                resetRightPanelDrawing();
             }
 
         } else { 
@@ -116,7 +122,7 @@ function handleCanvasClick(event){
             // Masukkan shape yang terbentuk ke dalam list shape
             drawer.moveCandidatetoShape();
             currentState = STATE.IDLE;
-            resetRightPanel();
+            resetRightPanelDrawing();
         }
     }  else if (currentState == STATE.IDLE){
         // Jika Idle dilakukan pengecekan apakah ada vertex model yang diclick
@@ -153,11 +159,24 @@ function handleCanvasClick(event){
         }
     } else {
         // State edit
-        let vertexLocked = clickedShapeInfo.shape.getVertexClicked(coordX, coordY);
-        if (vertexLocked != -1){
-            // Lock vertex
-            clickedShapeInfo.vertexIdx = vertexLocked;
+        let shape = drawer.getShapeAndVertexClicked(coordX, coordY);
+        if (shape["vertexIdx"] != -1){
+            // Jika model yang diclick adalah model yang berbeda
+            if (shape["shapeClicked"].id != clickedShapeInfo.shape.id){
+                // Change model
+                clickedShapeInfo.setInfo(shape["shapeClicked"], shape["vertexIdx"], "#FF0000")
+            } else {
+                // Lock vertex
+                clickedShapeInfo.vertexIdx = vertexLocked;
+            }
             clickedShapeInfo.render(rightPanel);
+            drawer.drawAllShapes();
+            drawer.drawPoints(clickedShapeInfo.shape);
+        } else {
+            // Kembali idle jika klik blank canvas
+            currentState = STATE.IDLE;
+            console.log("masuk")
+            resetRightPanelEditing();
         }
     }
 }

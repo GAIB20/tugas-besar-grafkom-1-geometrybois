@@ -54,7 +54,7 @@ class ClickedShapeInfo{
         this.vertexIdx = vertexIdx;
         this.color = color;
 
-        if ( /^polygon/.test(this.shape.id)){
+        if (this.shape.shapeType == ShapeTypes.POLYGON){
             this.maxVertex = this.shape.drawArraysCount();
             this.vertexCount = this.maxVertex;
         }
