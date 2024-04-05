@@ -33,6 +33,16 @@ body {
     cursor: pointer;
 }
 
+#convex-btn{
+    margin-top: 30px;
+    background-color: #082bf4;
+    color: white;
+}
+
+#convex-btn:hover{
+    background-color: #089ef4;
+}
+
 .button:hover {
     background-color: #45a049;
 }

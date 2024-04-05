@@ -13,6 +13,7 @@ const STATE =  Object.freeze({
     ONEDITING: "OnEditing",
 })
 var currentState = STATE.IDLE;
+var convexHullMode = false; 
 
 var coordX = 0;
 var coordY = 0;
@@ -96,7 +97,9 @@ function handleCanvasClick(event){
         if (drawingInfo.shapeType == ShapeTypes.POLYGON){
             // Jika merupakan shape polygon, tambah vertex 
             drawer.shapeCandidate.updateLastPoint(new Point(coordX, coordY));
-            drawer.shapeCandidate.preserveConvexHull();
+            if(convexHullMode){
+                drawer.shapeCandidate.preserveConvexHull();
+            }
 
             // Draw polygon terupdate
             drawer.drawShapeCandidate();
@@ -150,7 +153,9 @@ function handleCanvasClick(event){
             // Jika polygon lakukan penambahan titik apabila memungkinkan 
             if (clickedShapeInfo.vertexCount < clickedShapeInfo.getMaxVertex()){
                 clickedShapeInfo.shape.updateLastPoint(new Point(coordX, coordY));
-                clickedShapeInfo.shape.preserveConvexHull();
+                if(convexHullMode){
+                    clickedShapeInfo.shape.preserveConvexHull();
+                }
                 drawer.drawAllShapes();
                 clickedShapeInfo.vertexCount++;
                 clickedShapeInfo.render(rightPanel);
@@ -288,7 +293,9 @@ function handleCanvasMouseUp(event){
              if (clickedShapeInfo.vertexCount == clickedShapeInfo.getMaxVertex()){
                 // Jika tidak menambah vertex, lakukan drop
                 currentState = STATE.EDIT;
-                clickedShapeInfo.shape.preserveConvexHull();
+                if(convexHullMode){
+                    clickedShapeInfo.shape.preserveConvexHull();
+                }
                 drawer.drawAllShapes();
             }
         }
@@ -368,3 +375,17 @@ function loadModelHandle(){
 }
 
 loadButton.addEventListener("click", loadModelHandle)
+
+// Convex Hull Mode
+const convextHullButton = document.getElementById("convex-btn");
+
+function handleConvexModeToggle(e){
+    if (convexHullMode){
+        convextHullButton.innerText = "Not Preserve Convex Hull";
+    } else {
+        convextHullButton.innerText = "Preserve Convex Hull";
+    }
+    convexHullMode = !convexHullMode;
+}
+
+convextHullButton.addEventListener("click", (e)=> {handleConvexModeToggle(e)})
