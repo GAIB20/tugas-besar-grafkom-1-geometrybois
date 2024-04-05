@@ -326,7 +326,7 @@ const saveButton = document.getElementById("save-btn");
 
 function saveModel(object) {
     if (object != null){
-        const filename = "object-file"
+        const filename = object.id;
     
         const text = JSON.stringify(object);
     
