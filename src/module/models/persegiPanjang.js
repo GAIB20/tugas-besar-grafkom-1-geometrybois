@@ -2,6 +2,7 @@
 import Shape from "./shape.js";
 import ShapeTypes from "../type/shapeTypes.js";
 import Point from "../utils/point.js";
+import Color from "../utils/color.js";
 
 class Rectangle extends Shape{
     /**
@@ -180,6 +181,42 @@ class Rectangle extends Shape{
         this.vertices[three].y = this.vertices[two].y + projectionLengthY;
     }
 
+    static generateShapeFromObject(object) {
+        let rectangle = new Rectangle();
+        rectangle.angle = object.angle;
+        rectangle.formed = object.formed;
+        let point = new Point(object.p1.x, object.p1.y);
+        point.setColor(new Color(object.p1.r, object.p1.g, object.p1.b, object.p1.a));
+        rectangle.p1 = point;
+        point = new Point(object.p2.x, object.p2.y);
+        point.setColor(new Color(object.p2.r, object.p2.g, object.p2.b, object.p2.a));
+        rectangle.p2 = point;
+        point = new Point(object.p3.x, object.p3.y);
+        point.setColor(new Color(object.p3.r, object.p3.g, object.p3.b, object.p3.a));
+        rectangle.p3 = point;
+        point = new Point(object.p4.x, object.p4.y);
+        point.setColor(new Color(object.p4.r, object.p4.g, object.p4.b, object.p4.a));
+        rectangle.p4 = point;
+
+        point = new Point(object.startPoint.x, object.startPoint.y);
+        point.setColor(new Color(object.startPoint.r, object.startPoint.g, object.startPoint.b, object.startPoint.a));
+        rectangle.startPoint = point;
+        rectangle.originTranslation = object.originTranslation;
+        rectangle.position = object.position;
+        rectangle.rotation = object.rotation;
+        rectangle.rotationDegree = object.rotationDegree;
+        rectangle.scale = object.scale;
+        rectangle.shapeType = object.shapeType;
+        rectangle.shear = object.shear;
+        rectangle.vertices=[];
+        for (let vertex of object.vertices){
+            let point = new Point(vertex.x, vertex.y);
+            point.setColor(new Color(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a));
+            rectangle.vertices.push(point);
+        }
+        
+        return rectangle;
+    }
 }
 
 export default Rectangle;

@@ -317,9 +317,8 @@ function updateCursorCoordinates(event) {
 }
 
 function modifyVertex(event, selectedObject, index) {
-    updateCursorCoordinates(event);
     selectedObject.resize(index, coordX, coordY);
-    drawer.drawOneShape(selectedObject);
+    drawer.drawAllShapes();
 }
 
 // Save Model
