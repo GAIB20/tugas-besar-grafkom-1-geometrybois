@@ -5,30 +5,16 @@ import Point from "../utils/point.js";
 
 class Square extends Shape{
     /**
-     * @type {Point} p1
+     * @type {Point} vertices
+     * @description titik tengah persegi
      */
-    p1;
-    /**
-     * @type {Point} p2
-     */
-    p2;
-    /**
-     * @type {Point} p3
-     */
-    p3;
-    /**
-     * @type {Point} p4
-     */
-    p4;
+    center;
+
     static counter = 0;
     constructor() {
         let idName = "square#" + Square.counter;
         super(idName, idName, ShapeTypes.SQUARE);
         Square.counter++;
-        this.p1 = new Point(0, 0);
-        this.p2 = new Point(0, 0);
-        this.p3 = new Point(0, 0);
-        this.p4 = new Point(0, 0);
     }
 
     drawArraysMode(gl) {
@@ -40,32 +26,87 @@ class Square extends Shape{
     }
 
     setPoints(p1, p2, p3, p4) {
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
-        this.p4 = p4;
+        this.vertices = [p1, p2, p3, p4];
     }
 
     getPositionBuffer() {
         return new Float32Array([
-            this.p1.x,this.p1.y, // p1
-            this.p2.x,this.p2.y, // p2
-            this.p3.x,this.p3.y, // p3
-            this.p3.x,this.p3.y, // p3
-            this.p2.x,this.p2.y, // p2
-            this.p4.x,this.p4.y // p4
+            this.vertices[0].x, this.vertices[0].y,
+            this.vertices[3].x, this.vertices[3].y,
+            this.vertices[1].x, this.vertices[1].y,
+            this.vertices[3].x, this.vertices[3].y,
+            this.vertices[2].x, this.vertices[2].y,
+            this.vertices[1].x, this.vertices[1].y
         ]);
     }
 
     getColorBuffer() {
+        
         return new Float32Array([
-            0, 1, 0.5, 1,
-            0, 1, 0.5, 1,
-            0, 1, 0.5, 1,
-            0, 1, 0.5, 1,
-            0, 1, 0.5, 1,
-            0, 1, 0.5, 1
-        ]);
+            this.vertices[0].color.r, this.vertices[0].color.g, this.vertices[0].color.b, this.vertices[0].color.a,
+            this.vertices[3].color.r, this.vertices[3].color.g, this.vertices[3].color.b, this.vertices[3].color.a,
+            this.vertices[1].color.r, this.vertices[1].color.g, this.vertices[1].color.b, this.vertices[1].color.a,
+            this.vertices[3].color.r, this.vertices[3].color.g, this.vertices[3].color.b, this.vertices[3].color.a,
+            this.vertices[2].color.r, this.vertices[2].color.g, this.vertices[2].color.b, this.vertices[2].color.a,
+            this.vertices[1].color.r, this.vertices[1].color.g, this.vertices[1].color.b, this.vertices[1].color.a
+         ]);
+    }
+
+    getVertexClicked(x, y) {
+        for (let i = 0; i < this.vertices.length; i++) {
+            if (((x >= (this.vertices[i].x - 5)) && (x <= (this.vertices[i].x +5))) && ((y >= (this.vertices[i].y-5)) && (y <= (this.vertices[i].y+5)))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    addStartPoint(point) {
+        this.vertices[0] = point;
+        this.vertices[1] = point;
+        this.vertices[2] = point;
+        this.vertices[3] = point;
+        this.center = point;
+    }
+
+    updateLastPoint(point) {
+        // Harus tetap persegi sama sisi, gunakan center
+        let dx = Math.abs(point.x - this.center.x);
+        let dy = Math.abs(point.y - this.center.y);
+        let d = Math.min(dx, dy);
+        this.vertices[0] = new Point(this.center.x - d, this.center.y - d);
+        this.vertices[1] = new Point(this.center.x + d, this.center.y - d);
+        this.vertices[2] = new Point(this.center.x + d, this.center.y + d);
+        this.vertices[3] = new Point(this.center.x - d, this.center.y + d);
+    }
+
+    setPoint(idx, point) {
+        // Tetap persegi sama sisi, gunakan center
+        let dx = Math.abs(point.x - this.center.x);
+        let dy = Math.abs(point.y - this.center.y);
+        let d = Math.min(dx, dy);
+        this.vertices[0] = new Point(this.center.x - d, this.center.y - d);
+        this.vertices[1] = new Point(this.center.x + d, this.center.y - d);
+        this.vertices[2] = new Point(this.center.x + d, this.center.y + d);
+        this.vertices[3] = new Point(this.center.x - d, this.center.y + d);
+    }
+
+    
+
+    static generateShapeFromObject(object) {
+        let square = new Square();
+        square.angle = object.angle;
+        square.formed = object.formed;
+        square.originTranslation = object.originTranslation;
+        square.position = object.position;
+        square.rotation = object.rotation;
+        square.rotationDegree = object.rotationDegree;
+        square.scale = object.scale;
+        square.shapeType = object.shapeType;
+        square.shear = object.shear;
+
+        square.setPoints(new Point(object.vertices[0].x, object.vertices[0].y), new Point(object.vertices[1].x, object.vertices[1].y), new Point(object.vertices[2].x, object.vertices[2].y), new Point(object.vertices[3].x, object.vertices[3].y));
+        return square;
     }
 
 }

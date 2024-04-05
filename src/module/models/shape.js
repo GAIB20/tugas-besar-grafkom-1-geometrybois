@@ -186,8 +186,8 @@ class Shape extends Node2 {
         return [
             x - 5, y + 5,
             x + 5, y + 5,
-            x - 5, y - 5,
             x + 5, y - 5,
+            x - 5, y - 5,
         ]
     }
 

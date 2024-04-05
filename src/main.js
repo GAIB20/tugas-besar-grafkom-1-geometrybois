@@ -48,6 +48,7 @@ function handleLeftPanelClick(event, shapeType){
 }
 
 drawGarisPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.LINES)});
+drawPersegiPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.SQUARE)});
 drawPolygonPanel.addEventListener('click', (e) => {handleLeftPanelClick(e, ShapeTypes.POLYGON)});
 drawRectanglePanel.addEventListener('click', (e) => { handleLeftPanelClick(e, ShapeTypes.RECTANGLE);})
 
@@ -116,10 +117,10 @@ function handleCanvasClick(event){
             if (drawingInfo.shapeType == ShapeTypes.RECTANGLE){
                 // Update points sehingga sesuai posisi terakhir
                 drawer.shapeCandidate.updatePoints(new Point(coordX, coordY));
-            } else if (drawingInfo.shapeType == ShapeTypes.LINES){
+            } else if (drawingInfo.shapeType == ShapeTypes.LINES || drawingInfo.shapeType == ShapeTypes.SQUARE){
                 // Update points sehingga sesuai posisi terakhir
                 drawer.shapeCandidate.updateLastPoint(new Point(coordX, coordY));
-            }
+            } 
             
             drawer.drawShapeCandidate();
             // Masukkan shape yang terbentuk ke dalam list shape
@@ -201,7 +202,7 @@ function handleCanvasMouseMove(event){
                 drawer.shapeCandidate.setCount(drawer.shapeCandidate.drawArraysCount()+1);
             }
             drawer.drawShapeCandidate();
-        } else if (drawingInfo.shapeType == ShapeTypes.LINES){
+        } else if (drawingInfo.shapeType == ShapeTypes.LINES || drawingInfo.shapeType == ShapeTypes.SQUARE){
             // Update posisi titik pada garis
             drawer.shapeCandidate.updateLastPoint(new Point(coordX, coordY));
             drawer.drawShapeCandidate();
@@ -237,7 +238,7 @@ function handleCanvasMouseMove(event){
                 }
             }
             drawer.drawAllShapes();
-        } else if (clickedShapeInfo.shape.shapeType == ShapeTypes.LINES){
+        } else if (clickedShapeInfo.shape.shapeType == ShapeTypes.LINES || clickedShapeInfo.shape.shapeType == ShapeTypes.SQUARE){
             let updatedPoint = new Point(coordX, coordY);
             updatedPoint.setColor(clickedShapeInfo.shape.vertices[clickedShapeInfo.vertexIdx].color);
             clickedShapeInfo.shape.setPoint(clickedShapeInfo.vertexIdx, updatedPoint);
