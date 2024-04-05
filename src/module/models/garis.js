@@ -1,56 +1,78 @@
 import Shape from "./shape.js";
 import ShapeTypes from "../type/shapeTypes.js";
-import Point2D from "../utils/point.js";
+import Point from "../utils/point.js";
+import Color from "../utils/color.js";
 
 class Garis extends Shape {
-    /**
-     * @type {Point2D} p1
-     */
-    p1;
-    /**
-     * @type {Point2D} p2
-     */
-    p2;
 
     static counter = 0;
     constructor() {
         let idName = "line#" + Garis.counter;
-        super(0, idName, ShapeTypes.LINES);
+        super(idName, idName, ShapeTypes.LINES);
         Garis.counter++;
     }
 
-
+    /**
+     * @override
+     * @param {WebGLRenderingContext} gl 
+     * @returns {GLenum} WebGL draw arrays mode
+     * @description The type of the prmitive shape to be drawn
+     */
     drawArraysMode(gl) {
-        return gl.POINTS;
+        return gl.LINES;
     }
 
     drawArraysCount() {
-        return 3;
+        return 2;
     }
 
     getPositionBuffer() {
         return new Float32Array([
-            205, 144,
-            453, 211,
-            720, 326,
-            696, 134,
-            400, 500,
-            0, 300
+            this.vertices[0].x, this.vertices[0].y,
+            this.vertices[1].x, this.vertices[1].y
         ]);
     }
 
     getColorBuffer() {
-        var r1 = Math.random();
-        var b1 = Math.random();
-        var g1 = Math.random();
+        
         return new Float32Array([
-            r1, b1, g1, 1,
-            r1, b1, g1, 1,
-            r1, b1, g1, 1,
-            b1, r1, g1, 1,
-            b1, r1, g1, 1,
-            b1, r1, g1, 1
+            this.vertices[0].color.r, this.vertices[0].color.g, this.vertices[0].color.b, this.vertices[0].color.a,
+            this.vertices[1].color.r, this.vertices[1].color.g, this.vertices[1].color.b, this.vertices[1].color.a
         ]);
+    }
+
+    getVertexClicked(x, y) {
+        for (let i = 0; i < this.vertices.length; i++) {
+            if (((x >= (this.vertices[i].x - 5)) && (x <= (this.vertices[i].x +5))) && ((y >= (this.vertices[i].y-5)) && (y <= (this.vertices[i].y+5)))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    addStartPoint(point) {
+        this.vertices[0] = point;
+        this.vertices[1] = point;
+    }
+
+    updateLastPoint(point) {
+        this.vertices[1] = point;
+    }
+
+    static generateShapeFromObject(object) {
+        let garis = new Garis();
+        garis.angle = object.angle;
+        garis.formed = object.formed;
+        garis.originTranslation = object.originTranslation;
+        garis.position = object.position;
+        garis.rotation = object.rotation;
+        garis.rotationDegree = object.rotationDegree;
+        garis.scale = object.scale;
+        garis.shapeType = object.shapeType;
+        garis.shear = object.shear;
+
+        garis.setPoints([new Point(object.vertices[0].x, object.vertices[0].y), new Point(object.vertices[1].x, object.vertices[1].y)]);
+        return garis;
     }
 
 }

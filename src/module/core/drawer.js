@@ -68,8 +68,9 @@ class Drawer {
         console.log(`window: ${window.innerWidth}, ${window.innerHeight}`);
         gl.canvas.width = gl.canvas.clientWidth - leftPanelWidth - rightPanelWidth;
         gl.canvas.height = gl.canvas.clientHeight;
+        
         gl.viewport(leftPanelWidth-undetectedOffset, 0, gl.canvas.width, gl.canvas.height);
-
+        
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.useProgram(program);
@@ -123,7 +124,8 @@ class Drawer {
         let shape = null;
         switch (shapeType) {
             case ShapeTypes.LINES:
-                shape = new Garis(0, "Garis1", mousePosition);
+                shape = new Garis();
+                shape.addStartPoint(mousePosition);
                 break;
             case ShapeTypes.POLYGON:
                 shape = new Polygon();
