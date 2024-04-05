@@ -23,9 +23,8 @@ class Polygon extends Shape{
         this.vertices[this.vertices.length-1] = point;
     }
 
-    removePoint(){
-        point = this.vertices.pop()
-        return point
+    removePoint(idx){
+        this.vertices.splice(idx,1);
     }
 
     setCount(count){
