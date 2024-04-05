@@ -155,7 +155,13 @@ function handleCanvasClick(event){
             }
         }
     } else {
-
+        // State edit
+        let vertexLocked = clickedShapeInfo.shape.getVertexClicked(coordX, coordY);
+        if (vertexLocked != -1){
+            // Lock vertex
+            clickedShapeInfo.vertexIdx = vertexLocked;
+            clickedShapeInfo.render(rightPanel);
+        }
     }
 }
 
@@ -201,7 +207,10 @@ function handleCanvasMouseMove(event){
                 } else {
                     // Kasus polygon dalam kondisi siap untuk memindahkan titik
                     // Update titik saat hovering
-                    clickedShapeInfo.shape.setPoint(clickedShapeInfo.vertexIdx, new Point(coordX, coordY));
+                    let updatedPoint = new Point(coordX, coordY);
+                    updatedPoint.setColor(clickedShapeInfo.shape.vertices[clickedShapeInfo.vertexIdx].color);
+                    console.log(updatedPoint);
+                    clickedShapeInfo.shape.setPoint(clickedShapeInfo.vertexIdx, updatedPoint);
                 }
             }
             drawer.drawAllShapes();
@@ -220,7 +229,6 @@ function handleCanvasMouseDown(event){
     updateCursorCoordinates(event);
     if (currentState == STATE.EDIT){
         if ((clickedShapeInfo.shape.shapeType == ShapeTypes.POLYGON)){
-            console.log("mouse down");
             // Jika polygon akan dicek lagi apakah sedang menambah vertex atau tidak
             if (clickedShapeInfo.vertexCount == clickedShapeInfo.getMaxVertex()){
                 // Jika tidak menambah vertex, mulai lakukan drag apabila ada vertex yang diklik
@@ -230,6 +238,7 @@ function handleCanvasMouseDown(event){
                     clickedShapeInfo.vertexIdx = vertexLocked;
                     // Memasuki state onediting
                     currentState = STATE.ONEDITING;
+                    clickedShapeInfo.render(rightPanel);
                 }
             }
         } else {
